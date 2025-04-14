@@ -13,10 +13,10 @@
             <x-ui.image-display src="{{ asset('storage/property/' . $property->property_image) }}" alt="Property Image" />
 
             <x-property.property-details
-                price="{{ $property->rent }}"
-                location="{{ $property->location->address }}, {{ $property->location->city }}"
-                size="{{ $property->propertyType->type_name }}"
+                rent="{{ $property->rent }}"
                 description="{{ $property->description }}"
+                size="{{ $property->propertyType->type_name }}"
+                location="{{ $property->location->address }}, {{ $property->location->town_city }},  {{ $property->location->area }}."
             />
 
             <x-ui.feature :features="collect($property->amenities)->mapWithKeys(function($amenity) {
