@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'paginate' => env('PROPERTY_PAGINATE', 24),
+
 ];
