@@ -1,53 +1,75 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Property;
-use Livewire\WithPagination;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Livewire\WithPagination;
 
-class PropertyService
+final class PropertyService
 {
     use WithPagination;
+
     public function findPropertyByRequestUrl(string $url): Property
     {
         preg_match('/\/property-details\/(\d+)/', $url, $matches);
 
         $propertyId = $matches[1] ?? null;
 
-        return $propertyId ? Property::with(['location', 'amenities'])->findOrFail($propertyId) : new Property();
+        return $propertyId !== null && $propertyId !== '0'
+            ? Property::with(['location', 'amenities'])->findOrFail($propertyId)
+            : new Property;
     }
 
+    /**
+     * @return Collection<int, Property>|LengthAwarePaginator<int, Property>
+     */
     public function resolveProperties(string $path, ?Property $property): Collection|LengthAwarePaginator
     {
-        if ('/' === $path) {
-            return Property::with(['location', 'amenities'])
+        if ($path === '/') {
+            return Property::query()
+                ->with(['location', 'amenities'])
                 ->orderBy('created_at', 'desc')
                 ->take(15)
                 ->get();
         }
 
-        if ('properties' === $path) {
+        if ($path === 'properties') {
+            $perPage = (int) (config('app.paginate') ?? 30);
+
             return Property::with(['location', 'amenities'])
                 ->orderBy('created_at', 'desc')
-                ->paginate(config('app.paginate', 30), pageName: 'properties-page');
+                ->paginate($perPage, pageName: 'properties-page');
         }
 
         if (str_starts_with($path, 'property-details/')) {
             return $this->getRelatedProperties($property);
         }
 
-        return new Collection();
+        return new Collection;
     }
 
+    /**
+     * @return Collection<int, Property>
+     */
     private function getRelatedProperties(?Property $property): Collection
     {
-        if (!$property) return new Collection();
+        if (! $property instanceof Property) {
+            return new Collection;
+        }
+        /**
+         * @return Builder|Builder<Property>
+         */
+        $query = Property::query();
 
-        return Property::whereHas('propertyType', function ($query) use ($property) {
-            $query->where('id', $property->property_type_id);
-        })
+        return $query
+            ->whereHas('propertyType', function ($query) use ($property): void {
+                $query->where('id', $property->property_type_id);
+            })
             ->where('id', '!=', $property->id)
             ->with(['location', 'amenities', 'propertyType'])
             ->inRandomOrder()

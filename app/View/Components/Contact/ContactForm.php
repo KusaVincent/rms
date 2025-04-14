@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components\Contact;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ContactForm extends Component
+final class ContactForm extends Component
 {
     /**
      * Create a new component instance.
@@ -19,7 +20,7 @@ class ContactForm extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): View
     {
         return view('components.contact.contact-form');
     }

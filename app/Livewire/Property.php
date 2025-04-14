@@ -1,21 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
-use Livewire\Component;
-use Illuminate\View\View;
+use App\Actions\ResolvePropertyClassAction;
+use App\Models\Property as PropertyModel;
 use App\Services\PropertyService;
 use Illuminate\Support\Facades\Request;
-use App\Models\Property as PropertyModel;
-use App\Actions\ResolvePropertyClassAction;
+use Illuminate\View\View;
+use Livewire\Component;
 
-class Property extends Component
+final class Property extends Component
 {
     public string $class;
-    protected $properties;
+
     public ?PropertyModel $property = null;
-    protected PropertyService $propertyService;
-    protected ResolvePropertyClassAction $resolveClassAction;
+
+    private \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator|null $properties = null;
+
+    private PropertyService $propertyService;
+
+    private ResolvePropertyClassAction $resolveClassAction;
 
     public function mount(PropertyService $propertyService, ResolvePropertyClassAction $resolveClassAction): void
     {

@@ -1,19 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
-use Livewire\Component;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Livewire\Component;
 
-class Banner extends Component
+final class Banner extends Component
 {
     public string $bannerHeight;
+
     public string $backgroundImage;
 
     public function mount(Request $request): void
     {
         [$this->bannerHeight, $this->backgroundImage] = $this->determineBannerAttributes($request->path());
+    }
+
+    public function render(): View
+    {
+        return view('livewire.banner');
     }
 
     private function determineBannerAttributes(string $path): array
@@ -23,10 +31,5 @@ class Banner extends Component
             'properties' => ['h-[50vh]', asset('storage/banner.jpg')],
             default => ['h-[25vh]', asset('storage/breadcrumb.jpg')],
         };
-    }
-
-    public function render():View
-    {
-        return view('livewire.banner');
     }
 }

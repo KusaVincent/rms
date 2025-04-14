@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Property;
 use Illuminate\View\View;
+use Livewire\Component;
 
-class Detail extends Component
+final class Detail extends Component
 {
     public Property $property;
 

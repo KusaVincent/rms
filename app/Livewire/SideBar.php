@@ -1,26 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire;
 
 use App\Models\Location;
-use App\Models\PropertyType;
-use Livewire\Attributes\Url;
-use Livewire\Component;
 use App\Models\Property;
+use App\Models\PropertyType;
 use Illuminate\Support\Facades\Request;
 use Illuminate\View\View;
+use Livewire\Attributes\Url;
+use Livewire\Component;
 
-class SideBar extends Component
+final class SideBar extends Component
 {
     public $results = [];
+
     #[Url()]
     public $locations = [];
+
     #[Url()]
     public $propertyTypes = [];
+
     #[Url()]
     public string $search = '';
+
     #[Url()]
     public array $selectedLocations = [];
+
     #[Url()]
     public array $selectedTypes = [];
 
@@ -50,15 +57,15 @@ class SideBar extends Component
     {
         $query = Property::query();
 
-        if (!empty($this->search)) {
+        if ($this->search !== '' && $this->search !== '0') {
             $query->where('property_name', 'like', "%{$this->search}%");
         }
 
-        if (!empty($this->selectedLocations)) {
+        if ($this->selectedLocations !== []) {
             $query->whereIn('location_id', $this->selectedLocations);
         }
 
-        if (!empty($this->selectedTypes)) {
+        if ($this->selectedTypes !== []) {
             $query->whereIn('property_type_id', $this->selectedTypes);
         }
 
@@ -67,7 +74,7 @@ class SideBar extends Component
         } elseif (Request::is('properties')) {
             $this->results = $query->latest()
                 ->take(30)->get();
-//                ->paginate(10);
+            //                ->paginate(10);
         }
     }
 

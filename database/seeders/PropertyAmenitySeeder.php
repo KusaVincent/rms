@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Property;
 use App\Models\PropertyAmenity;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PropertyAmenitySeeder extends Seeder
+final class PropertyAmenitySeeder extends Seeder
 {
     /**
      * Run the database seeds.

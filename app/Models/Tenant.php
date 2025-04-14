@@ -1,22 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Tenant extends Model
+/**
+ * @template TFactory of Factory
+ *
+ * @mixin Model
+ */
+final class Tenant extends Model
 {
     use HasFactory;
 
     protected $fillable = ['first_name', 'last_name', 'middle_name', 'email', 'phone', 'password'];
 
+    /**
+     * @return HasMany<LeaseAgreement, Tenant>
+     */
     public function leaseAgreements(): HasMany
     {
         return $this->hasMany(LeaseAgreement::class);
     }
 
+    /**
+     * @return HasMany<Maintenance, Tenant>
+     */
     public function maintenance(): HasMany
     {
         return $this->hasMany(Maintenance::class);

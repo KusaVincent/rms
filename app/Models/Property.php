@@ -1,26 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-//use Laravel\Scout\Searchable;
+// use Laravel\Scout\Searchable;
 /**
+ * @mixin Model
+ *
+ * @property int $id
+ * @property int $property_type_id
+ *
  * @method static findOrFail($id)
  * @method static where(string $string, $propertyType)
  */
-class Property extends Model
+final class Property extends Model
 {
     use HasFactory;
-//    use Searchable;
-//    use SoftDeletes;
-//    use CascadeSoftDeletes;
+    //    use Searchable;
+    //    use SoftDeletes;
+    //    use CascadeSoftDeletes;
 
     protected $fillable = [
         'propertyTitle',
@@ -72,16 +79,25 @@ class Property extends Model
         'deleted' => 'boolean',
     ];
 
+    /**
+     * @return BelongsTo<PropertyType, Property>
+     */
     public function propertyType(): BelongsTo
     {
         return $this->belongsTo(PropertyType::class);
     }
 
+    /**
+     * @return BelongsTo<Location, Property>
+     */
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
     }
 
+    /**
+     * @return BelongsToMany<Amenity>
+     */
     public function amenities(): BelongsToMany
     {
         return $this->belongsToMany(Amenity::class, 'property_amenities');

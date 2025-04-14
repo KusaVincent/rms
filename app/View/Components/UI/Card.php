@@ -1,32 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components\UI;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Card extends Component
+final class Card extends Component
 {
-    public string $image;
-    public string $title;
-    public string $description;
-    public string $link;
     /**
      * Create a new component instance.
      */
-    public function __construct($image, $title, $description, $link)
-    {
-        $this->image = $image;
-        $this->title = $title;
-        $this->description = $description;
-        $this->link = $link;
-    }
+    public function __construct(public string $image, public string $title, public string $description, public string $link) {}
 
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): View
     {
         return view('components.ui.card');
     }

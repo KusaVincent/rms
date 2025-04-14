@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Maintenance;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class MaintenanceSeeder extends Seeder
+final class MaintenanceSeeder extends Seeder
 {
     /**
      * Run the database seeds.

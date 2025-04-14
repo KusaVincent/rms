@@ -1,26 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components;
 
-use Closure;
+use App\Models\Property;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\Component;
 
-class FilterList extends Component
+final class FilterList extends Component
 {
-    public string $title;
-    public $items;
-    public string $idPrefix;
+    /**
+     * @param  Collection<int, Property>  $items
+     */
+    public function __construct(public string $title, public Collection $items, public string $idPrefix = 'item') {}
 
-    public function __construct($title, $items, $idPrefix = 'item')
-    {
-        $this->title = $title;
-        $this->items = $items;
-        $this->idPrefix = $idPrefix;
-    }
-
-    public function render(): View|Closure|string
+    public function render(): View
     {
         return view('components.filter-list');
     }
