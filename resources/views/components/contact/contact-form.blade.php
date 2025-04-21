@@ -17,7 +17,7 @@
             <x-form.input name="subject" type="text" value="{{ old('subject') }}" placeholder="Subject" wire:model="subject">
                 Subject
             </x-form.input>
-            <x-form.input name="mobile" type="text" value="{{ old('mobile') }}" placeholder="Phone Number" wire:model="mobile">
+            <x-form.input name="mobile" type="number" value="{{ old('mobile') }}" placeholder="Phone Number" wire:model="mobile">
                 Phone Number
             </x-form.input>
         </div>

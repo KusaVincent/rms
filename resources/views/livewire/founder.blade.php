@@ -9,7 +9,7 @@
                 <x-ui.founder
                     name="{{ $founder->name }}"
                     image="{{ $founder->image }}"
-                    :socials='$founder->social_media'
+                    :socials="$founder->social_media"
                 />
             @endforeach
         </div>
