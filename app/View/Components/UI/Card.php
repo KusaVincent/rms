@@ -12,7 +12,7 @@ final class Card extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $image, public string $title, public string $description, public string $link) {}
+    public function __construct(public string $image, public string $title, public string $link) {}
 
     /**
      * Get the view / contents that represent the component.

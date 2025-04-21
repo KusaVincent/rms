@@ -22,6 +22,9 @@ final class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            AboutSeeder::class,
+            FounderSeeder::class,
+            ContactSeeder::class,
             PropertyTypeSeeder::class,
             LocationSeeder::class,
             AmenitySeeder::class,

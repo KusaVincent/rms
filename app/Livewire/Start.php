@@ -6,11 +6,18 @@ namespace App\Livewire;
 
 use Illuminate\View\View;
 use Livewire\Component;
+use App\Models\Property;
 
 final class Start extends Component
 {
     public function render(): View
     {
-        return view('livewire.start');
+        $start = Property::count();
+
+        return view('livewire.start', [
+            'sale' => $start,
+            'agents' =>  $start,
+            'listings' => $start,
+        ]);
     }
 }

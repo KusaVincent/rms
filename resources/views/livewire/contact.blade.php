@@ -7,7 +7,7 @@
 
         <div class="flex flex-wrap">
             <x-contact.contact-form />
-            <x-contact.contact-info />
+            <x-contact.contact-info :contacts="$contacts"/>
         </div>
     </div>
 </section>

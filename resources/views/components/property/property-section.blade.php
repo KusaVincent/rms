@@ -11,7 +11,6 @@
                 :link="route('details', ['id' => $property->id])"
                 :propertyType="$property->propertyType->type_name"
                 :location="$property->location->town_city . ', ' . $property->location->area"
-                :description="\Illuminate\Support\Str::words($property->description, 10, '...')"
                 :image="asset($property->property_image ? 'storage/property/' . $property->property_image : 'default/image.png')"
             />
         @endforeach

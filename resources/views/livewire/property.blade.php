@@ -20,7 +20,6 @@
                         :link="route('details', ['id' => $property->id])"
                         :propertyType="$property->propertyType->type_name"
                         :location="$property->location->town_city . ', ' . $property->location->area"
-                        :description="\Illuminate\Support\Str::words($property->description, 10, '...')"
                         :image="asset($property->property_image ? 'storage/property/' . $property->property_image : 'default/image.png')"
                     />
                 @empty
@@ -31,7 +30,7 @@
             </div>
 
             @if ($properties instanceof \Illuminate\Contracts\Pagination\Paginator)
-                <div class="mt-10 flex justify-center px-5">
+                <div class="mt-10 px-20">
                     {{ $properties->links() }}
                 </div>
             @endif

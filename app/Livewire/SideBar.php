@@ -70,7 +70,7 @@ final class SideBar extends Component
         }
 
         if (Request::is('/')) {
-            $this->results = $query->latest()->take(15)->get();
+            $this->results = $query->latest()->take(7)->get();
         } elseif (Request::is('properties')) {
             $this->results = $query->latest()
                 ->take(30)->get();

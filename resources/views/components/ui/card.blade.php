@@ -1,4 +1,4 @@
-@props(['link', 'image', 'title', 'description', 'propertyType', 'rent' => 1, 'location'])
+@props(['link', 'image', 'title', 'propertyType', 'rent' => 1, 'location'])
 
 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 flex flex-col">
     <a href="{{ $link }}" wire:navigate>
@@ -12,8 +12,6 @@
         <p class="text-sm text-gray-600 "><span class="font-bold">{{ __('Rental Type') }}</span>: {{ $propertyType ?? 'N/A' }}</p>
         <p class="text-sm text-gray-600"><span class="font-bold">{{ __('Rent') }}</span> : Ksh {{ number_format($rent, 2) }}</p>
         <p class="text-sm text-gray-600"><span class="font-bold">{{ __('Location') }}</span>: {{ $location ?? 'N/A' }}</p>
-
-        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 mt-2">{{ $description }}</p>
     </div>
 
     <div class="p-5 mt-auto flex justify-end">
