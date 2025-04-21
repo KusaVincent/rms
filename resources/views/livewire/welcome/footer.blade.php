@@ -7,7 +7,7 @@
 
             <x-footer.resources-links />
 
-            <x-footer.contact-section />
+            <x-footer.contact-section :contacts="$contacts"/>
         </div>
     </div>
     <div class="bg-gray-900 text-center py-4">

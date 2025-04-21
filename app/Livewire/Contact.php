@@ -12,7 +12,7 @@ final class Contact extends Component
     public function render(): View
     {
         return view('livewire.contact', [
-            'contacts' => ContactModel::where('label', 'not like', '%Support%')->get(),
+            'contacts' => ContactModel::where('section', '!=', 'footer')->get(),
         ]);
     }
 }
