@@ -12,7 +12,7 @@
 ![Details page](storage/snips/detail-2.png)
 
 # About page
-![About page](storage/snips/about-1.png)
+![About page](storage/snips/about.png)
 ![About page](storage/snips/about-2.png)
 
 # Contact page
