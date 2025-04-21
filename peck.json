@@ -1,0 +1,13 @@
+{
+    "preset": "laravel",
+    "ignore": {
+        "words": [
+            "config",
+            "namespace"
+        ],
+        "paths": [
+            "app/"
+        ]
+    },
+    "exclude": ["vendor", "storage", "bootstrap/cache"]
+}
