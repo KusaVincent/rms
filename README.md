@@ -1,14 +1,19 @@
-![Landing page] (storage/snips/landing-1)
-![Landing page] (storage/snips/landing-2)
-![Landing page] (storage/snips/landing-3)
+# Landing page
+![Landing page](storage/snips/landing-1.png)
+![Landing page](storage/snips/landing-2.png)
+![Landing page](storage/snips/landing-3.png)
 
-![Property page] (storage/snips/property-1)
-![Property page] (storage/snips/property-2)
+# Property page
+![Property page](storage/snips/property-1.png)
+![Property page](storage/snips/property-2.png)
 
-![Details page] (storage/snips/detail-1)
-![Details page] (storage/snips/detail-2)
+# Details page
+![Details page](storage/snips/detail-1.png)
+![Details page](storage/snips/detail-2.png)
 
-![About page] (storage/snips/about-1)
-![About page] (storage/snips/about-2)
+# About page
+![About page](storage/snips/about-1.png)
+![About page](storage/snips/about-2.png)
 
-![Contact page] (storage/snips/contact-1)
+# Contact page
+![Contact page](storage/snips/contact.png)
