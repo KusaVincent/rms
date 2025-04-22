@@ -33,6 +33,7 @@ final class DatabaseSeeder extends Seeder
             LeaseAgreementSeeder::class,
             MaintenanceSeeder::class,
             PropertyAmenitySeeder::class,
+            ServiceAvailabilitySeeder::class,
         ]);
     }
 }

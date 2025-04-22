@@ -30,7 +30,10 @@
             })->toArray()" />
 
             <x-ui.map mapUrl="{{ $property->location->map ?? '' }}" />
-            <x-buttons.contact-button />
+
+            @auth
+                <x-buttons.contact-button />
+            @endauth
         </div>
 
         <x-property.property-details-sidebar />
