@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-// use Laravel\Scout\Searchable;
+use Laravel\Scout\Searchable;
 /**
  * @mixin Model
  *
@@ -24,8 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 final class Property extends Model
 {
-    use HasFactory;
-    //    use Searchable;
+    use HasFactory, Searchable;
     //    use SoftDeletes;
     //    use CascadeSoftDeletes;
 
@@ -78,6 +76,31 @@ final class Property extends Model
         'playground' => 'integer',
         'deleted' => 'boolean',
     ];
+
+    /**
+     * Get the name of the index associated with the model.
+     */
+    public function searchableAs(): string
+    {
+        return 'property_index';
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return array_merge($this->toArray(),[
+            'id' => (string) $this->id,
+            'rent' => (string) $this->rent,
+            'area' => $this->location->area,
+            'town_city' => $this->location->town_city,
+            'type_name' =>$this->propertyType->type_name,
+            'created_at' => $this->created_at->timestamp,
+        ]);
+    }
 
     /**
      * @return BelongsTo<PropertyType, Property>

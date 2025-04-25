@@ -51,6 +51,7 @@ final class SideBar extends Component
         $this->locations = Location::select('id', 'town_city')->get();
         $this->propertyTypes = PropertyType::select('id', 'type_name')->get();
         $this->applyFilters();
+//        $this->results = Property::search($this->search)->get();
     }
 
     public function applyFilters(): void
@@ -58,7 +59,7 @@ final class SideBar extends Component
         $query = Property::query();
 
         if ($this->search !== '' && $this->search !== '0') {
-            $query->where('property_name', 'like', "%{$this->search}%");
+            $query = Property::search($this->search);
         }
 
         if ($this->selectedLocations !== []) {
@@ -76,6 +77,7 @@ final class SideBar extends Component
                 ->take(30)->get();
             //                ->paginate(10);
         }
+//        dd($this->results);
     }
 
     public function render(): View
