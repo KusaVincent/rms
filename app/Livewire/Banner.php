@@ -19,11 +19,6 @@ final class Banner extends Component
         [$this->bannerHeight, $this->backgroundImage] = $this->determineBannerAttributes($request->path());
     }
 
-    public function render(): View
-    {
-        return view('livewire.banner');
-    }
-
     private function determineBannerAttributes(string $path): array
     {
         return match ($path) {

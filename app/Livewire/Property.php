@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Actions\ResolvePropertyClassAction;
-use App\Models\Property as PropertyModel;
+use App\Models\Property as ModelsProperty;
 use App\Services\PropertyService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Request;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -15,9 +17,9 @@ final class Property extends Component
 {
     public string $class;
 
-    public ?PropertyModel $property = null;
+    public ?ModelsProperty $property = null;
 
-    private \Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator|null $properties = null;
+    private Collection|LengthAwarePaginator|null $properties = null;
 
     private PropertyService $propertyService;
 
@@ -28,9 +30,8 @@ final class Property extends Component
         $this->propertyService = $propertyService;
         $this->resolveClassAction = $resolveClassAction;
 
-        if (Request::is('property-details/*')) {
+        if (Request::is('property-details/*'))
             $this->property = $this->propertyService->findPropertyByRequestUrl(Request::url());
-        }
 
         $this->class = $this->resolveClassAction->execute(Request::path());
 

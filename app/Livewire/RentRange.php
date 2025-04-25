@@ -16,9 +16,4 @@ final class RentRange extends Component
     public int $selectedMinPrice = 17590; // Initial selected minimum
 
     public int $selectedMaxPrice = 57904; // Initial selected maximum
-
-    public function render(): View
-    {
-        return view('livewire.rent-range');
-    }
 }
