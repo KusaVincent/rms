@@ -11,6 +11,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Request;
 use Illuminate\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Property extends Component
@@ -19,7 +20,7 @@ final class Property extends Component
 
     public ?ModelsProperty $property = null;
 
-    private Collection|LengthAwarePaginator|null $properties = null;
+    private $properties = null;
 
     private PropertyService $propertyService;
 
@@ -36,6 +37,12 @@ final class Property extends Component
         $this->class = $this->resolveClassAction->execute(Request::path());
 
         $this->properties = $this->propertyService->resolveProperties(Request::path(), $this->property);
+    }
+
+    #[On('search-results')]
+    public function setSearchResults($results): void
+    {
+        $this->properties = $results;
     }
 
     public function render(): View

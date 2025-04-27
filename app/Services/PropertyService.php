@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Property;
+use App\Traits\Paginatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -12,7 +13,7 @@ use Livewire\WithPagination;
 
 final class PropertyService
 {
-    use WithPagination;
+    use WithPagination, Paginatable;
 
     public function findPropertyByRequestUrl(string $url): Property
     {
@@ -21,7 +22,7 @@ final class PropertyService
         $propertyId = $matches[1] ?? null;
 
         return $propertyId !== null && $propertyId !== '0'
-            ? Property::with(['location', 'amenities'])->findOrFail($propertyId)
+            ? Property::with(['location', 'amenities', 'propertyType'])->findOrFail($propertyId)
             : new Property;
     }
 
@@ -31,19 +32,16 @@ final class PropertyService
     public function resolveProperties(string $path, ?Property $property): Collection|LengthAwarePaginator
     {
         if ($path === '/') {
-            return Property::query()
-                ->with(['location', 'amenities'])
+            return Property::with(['location', 'amenities', 'propertyType'])
                 ->orderBy('created_at', 'desc')
                 ->take(15)
                 ->get();
         }
 
         if ($path === 'properties') {
-            $perPage = (int) (config('app.paginate') ?? 30);
-
-            return Property::with(['location', 'amenities'])
+            return Property::with(['location', 'amenities', 'propertyType'])
                 ->orderBy('created_at', 'desc')
-                ->paginate($perPage, pageName: 'properties-page');
+                ->paginate($this->getPerPage(), pageName: 'properties-page');
         }
 
         if (str_starts_with($path, 'property-details/')) {

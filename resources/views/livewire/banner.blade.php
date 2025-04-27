@@ -23,6 +23,8 @@
             <a href="{{ route('properties') }}" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm sm:text-base" wire:navigate>
                 {{ __('Get Started Now') }}
             </a>
+
+            <livewire:search />
         </x-layouts.header-section>
     @elseif(Request::is('properties'))
         <x-layouts.header-section title="Properties to Suit Your Needs"
@@ -30,7 +32,9 @@
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'Properties']
             ]"
-        />
+        >
+            <livewire:search />
+        </x-layouts.header-section>
     @elseif(Request::is('property-details/*'))
         <x-layouts.header-section title="Discover Your Next Home"
             :breadcrumbs="[

@@ -77,7 +77,6 @@ final class SideBar extends Component
                 ->take(30)->get();
             //                ->paginate(10);
         }
-//        dd($this->results);
     }
 
     public function render(): View

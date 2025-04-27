@@ -193,35 +193,40 @@ return [
                          [
                              'name' => 'rent',
                              'type' => 'string',
-                         ],
-                         [
-                             'name' => 'property_name',
-                             'type' => 'string',
-                         ],
-                         [
-                             'name' => 'type_name',
-                             'type' => 'string',
-                         ],
-                         [
-                             'name' => 'town_city',
-                             'type' => 'string',
+                             'facet' => true,
                          ],
                          [
                              'name' => 'area',
                              'type' => 'string',
+                             'facet' => true,
+                         ],
+                         [
+                             'name' => 'type_name',
+                             'type' => 'string',
+                             'facet' => true,
+                         ],
+                         [
+                             'name' => 'town_city',
+                             'type' => 'string',
+                             'facet' => true,
                          ],
                          [
                              'name' => 'created_at',
                              'type' => 'int64',
                          ],
+                         [
+                             'name' => 'property_name',
+                             'type' => 'string',
+                             'facet' => true,
+                         ],
                      ],
                      'default_sorting_field' => 'created_at',
                  ],
                  'search-parameters' => [
-                     'query_by' => 'type_name, town_city, area,rent, property_name'
+                     'query_by' => 'type_name, town_city, area,rent, property_name',
+                     'query_by_weights' => '5, 3, 2, 2, 1',
                  ],
             ],
         ],
     ],
-
 ];

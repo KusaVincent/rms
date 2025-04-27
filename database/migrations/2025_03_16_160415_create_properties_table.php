@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('property_type_id');
-            $table->unsignedBigInteger('location_id');
+            $table->foreignId('property_type_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignId('location_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->string('property_name');
             $table->text('description');
             $table->text('property_image');
@@ -24,9 +28,6 @@ return new class extends Migration
             $table->integer('deposit');
             $table->boolean('availability')->default(true);
             $table->timestamps();
-
-            $table->foreign('property_type_id')->references('id')->on('property_types')->cascadeOnDelete();
-            $table->foreign('location_id')->references('id')->on('locations')->cascadeOnDelete();
         });
     }
 

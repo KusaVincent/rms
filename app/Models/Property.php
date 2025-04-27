@@ -28,53 +28,14 @@ final class Property extends Model
     //    use CascadeSoftDeletes;
 
     protected $fillable = [
-        'propertyTitle',
-        'propertyType',
-        'propertyRent',
-        'propertyDeposit',
-        'distance',
-        'propertyMap',
-        'propertyImage',
-        'propertyVideo',
+        'rent',
+        'deposit',
+        'location_id',
         'description',
-        'propertyLocation',
-        'floorNumber',
-        'buildingFloors',
-        'tiled',
-        'rented',
-        'kitchen',
-        'shower',
-        'security',
-        'garbage',
-        'water',
-        'balcony',
-        'closet',
-        'wifi',
-        'network',
-        'hangingLine',
-        'playground',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'tiled' => 'boolean',
-        'rented' => 'boolean',
-        'kitchen' => 'boolean',
-        'shower' => 'boolean',
-        'security' => 'boolean',
-        'garbage' => 'boolean',
-        'water' => 'integer',
-        'balcony' => 'boolean',
-        'closet' => 'boolean',
-        'network' => 'boolean',
-        'wifi' => 'boolean',
-        'hangingLine' => 'boolean',
-        'playground' => 'integer',
-        'deleted' => 'boolean',
+        'availability',
+        'property_name',
+        'property_image',
+        'property_type_id',
     ];
 
     /**
