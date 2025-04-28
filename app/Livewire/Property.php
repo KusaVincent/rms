@@ -20,7 +20,8 @@ final class Property extends Component
 
     public ?ModelsProperty $property = null;
 
-    private $properties = null;
+    private Collection|LengthAwarePaginator|null $properties = null;
+    private $searchResults = null;
 
     private PropertyService $propertyService;
 
@@ -42,13 +43,14 @@ final class Property extends Component
     #[On('search-results')]
     public function setSearchResults($results): void
     {
-        $this->properties = $results;
+        $this->searchResults = $results;
     }
 
     public function render(): View
     {
         return view('livewire.property', [
             'properties' => $this->properties,
+            'searchResults' => $this->searchResults,
         ])->layout('tenant-entry');
     }
 }
