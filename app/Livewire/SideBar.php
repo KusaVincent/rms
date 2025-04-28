@@ -23,18 +23,10 @@ final class SideBar extends Component
     public $propertyTypes = [];
 
     #[Url()]
-    public string $search = '';
-
-    #[Url()]
     public array $selectedLocations = [];
 
     #[Url()]
     public array $selectedTypes = [];
-
-    public function updatedSearch(): void
-    {
-        $this->applyFilters();
-    }
 
     public function updatedSelectedLocations(): void
     {
@@ -58,10 +50,6 @@ final class SideBar extends Component
     {
         $query = Property::query();
 
-        if ($this->search !== '' && $this->search !== '0') {
-            $query = Property::search($this->search);
-        }
-
         if ($this->selectedLocations !== []) {
             $query->whereIn('location_id', $this->selectedLocations);
         }
@@ -82,7 +70,6 @@ final class SideBar extends Component
     public function render(): View
     {
         return view('livewire.sidebar', [
-            'search' => $this->search,
             'results' => $this->results,
         ]);
     }

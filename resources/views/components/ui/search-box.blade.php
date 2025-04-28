@@ -1,4 +1,4 @@
-@props(['search' => '', 'results' => []])
+@props(['search' => ''])
 
 <div class="relative mb-4 group  mt-5 text-gray-700">
     <input
