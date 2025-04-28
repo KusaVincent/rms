@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Property;
 use App\Traits\Paginatable;
+use App\Traits\Selectable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -13,7 +14,7 @@ use Livewire\WithPagination;
 
 final class PropertyService
 {
-    use WithPagination, Paginatable;
+    use WithPagination, Paginatable, Selectable;
 
     public function findPropertyByRequestUrl(string $url): Property
     {
@@ -32,14 +33,16 @@ final class PropertyService
     public function resolveProperties(string $path, ?Property $property): Collection|LengthAwarePaginator
     {
         if ($path === '/') {
-            return Property::with(['location', 'amenities', 'propertyType'])
+            return Property::select($this->selects())
+                ->with($this->relations())
                 ->orderBy('created_at', 'desc')
                 ->take(15)
                 ->get();
         }
 
         if ($path === 'properties') {
-            return Property::with(['location', 'amenities', 'propertyType'])
+            return Property::select($this->selects())
+                ->with($this->relations())
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->getPerPage(), pageName: 'properties-page');
         }
@@ -65,11 +68,12 @@ final class PropertyService
         $query = Property::query();
 
         return $query
+            ->select($this->selects(true))
             ->whereHas('propertyType', function ($query) use ($property): void {
                 $query->where('id', $property->property_type_id);
             })
             ->where('id', '!=', $property->id)
-            ->with(['location', 'amenities', 'propertyType'])
+            ->with($this->relations())
             ->inRandomOrder()
             ->take(5)
             ->get();

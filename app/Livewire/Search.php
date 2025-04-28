@@ -4,13 +4,14 @@ namespace App\Livewire;
 
 use App\Models\Property;
 use App\Traits\Paginatable;
+use App\Traits\Selectable;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class Search extends Component
 {
-    use Paginatable;
+    use Paginatable, Selectable;
 
     #[Url()]
     public string $search = '';
@@ -21,12 +22,12 @@ class Search extends Component
         $this->results = collect();
 
         if ($this->search !== '' && $this->search !== '0')
-            $this->results = Property::whereIn('id',
-                Property::search($this->search)->get()->pluck('id')
-            )->with(['location', 'amenities', 'propertyType'])
-                ->get()
-//                ->paginate($this->getPerPage(), pageName: 'search-page')
-            ;
+            $this->results = Property::select($this->selects())
+                ->whereIn('id', Property::search($this->search)->get()->pluck('id'))
+                ->with($this->relations())
+                    ->get()
+    //                ->paginate($this->getPerPage(), pageName: 'search-page')
+                ;
 
         $this->dispatch('search-results', $this->results);
     }
