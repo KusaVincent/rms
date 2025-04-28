@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
+
 /**
  * @mixin Model
  *
@@ -53,12 +54,12 @@ final class Property extends Model
      */
     public function toSearchableArray(): array
     {
-        return array_merge($this->toArray(),[
+        return array_merge($this->toArray(), [
             'id' => (string) $this->id,
             'rent' => (string) $this->rent,
             'area' => $this->location->area,
             'town_city' => $this->location->town_city,
-            'type_name' =>$this->propertyType->type_name,
+            'type_name' => $this->propertyType->type_name,
             'created_at' => $this->created_at->timestamp,
         ]);
     }

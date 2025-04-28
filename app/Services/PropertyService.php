@@ -14,7 +14,7 @@ use Livewire\WithPagination;
 
 final class PropertyService
 {
-    use WithPagination, Paginatable, Selectable;
+    use Paginatable, Selectable, WithPagination;
 
     public function findPropertyByRequestUrl(string $url): Property
     {

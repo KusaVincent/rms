@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\ServiceAvailability;
 use Illuminate\Database\Seeder;
 
-class ServiceAvailabilitySeeder extends Seeder
+final class ServiceAvailabilitySeeder extends Seeder
 {
     /**
      * Run the database seeds.

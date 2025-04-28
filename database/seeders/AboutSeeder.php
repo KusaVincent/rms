@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\About;
 use Illuminate\Database\Seeder;
 
-class AboutSeeder extends Seeder
+final class AboutSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,13 +25,13 @@ class AboutSeeder extends Seeder
         ]);
 
         About::create([
-            'title'  =>"Honesty and Integrity",
-            'content' => "We are devoted to being trustworthy and reliable, always delivering the best services in an honest manner."
+            'title' => 'Honesty and Integrity',
+            'content' => 'We are devoted to being trustworthy and reliable, always delivering the best services in an honest manner.',
         ]);
 
         About::create([
-            'title' => "Client-Oriented Commitment",
-            'content' => "At Rentals Konekt, our clients' needs come first. We strive to keep their interests above all else."
+            'title' => 'Client-Oriented Commitment',
+            'content' => "At Rentals Konekt, our clients' needs come first. We strive to keep their interests above all else.",
         ]);
     }
 }

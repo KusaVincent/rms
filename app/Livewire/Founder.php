@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Models\Founder as ModelsFounder;
 use App\Traits\ChecksServiceAvailability;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
-use App\Models\Founder as ModelsFounder;
 
 final class Founder extends Component
 {
@@ -20,9 +20,11 @@ final class Founder extends Component
         $this->checkServiceAvailability($this->serviceKey);
     }
 
-    public function render() : View
+    public function render(): View
     {
-        if ($this->serviceUnavailable) return view('livewire.empty');
+        if ($this->serviceUnavailable) {
+            return view('livewire.empty');
+        }
 
         $founders = ModelsFounder::all();
 

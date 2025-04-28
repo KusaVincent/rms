@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Traits;
 
 use App\Models\ServiceAvailability;
@@ -12,6 +14,8 @@ trait ChecksServiceAvailability
     {
         $service = ServiceAvailability::where('service_key', $serviceKey)->first();
 
-        if (!$service || !$service->is_active) $this->serviceUnavailable = true;
+        if (! $service || ! $service->is_active) {
+            $this->serviceUnavailable = true;
+        }
     }
 }

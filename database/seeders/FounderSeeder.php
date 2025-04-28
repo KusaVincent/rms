@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Founder;
 use Illuminate\Database\Seeder;
 
-class FounderSeeder extends Seeder
+final class FounderSeeder extends Seeder
 {
     /**
      * Run the database seeds.

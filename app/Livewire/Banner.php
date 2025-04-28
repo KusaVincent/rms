@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Livewire\Component;
 
 final class Banner extends Component

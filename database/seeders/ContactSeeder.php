@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\Contact;
 use Illuminate\Database\Seeder;
 
-class ContactSeeder extends Seeder
+final class ContactSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -31,7 +33,7 @@ class ContactSeeder extends Seeder
             'label' => 'Email Address',
             'link' => 'mailto:info@rentalskonekt.com',
             'link_text' => 'info@rentalskonekt.com',
-            'section' => 'contact'
+            'section' => 'contact',
         ]);
 
         Contact::create([
@@ -39,7 +41,7 @@ class ContactSeeder extends Seeder
             'label' => 'Support Email Address',
             'link' => 'mailto:support@rentalskonekt.com',
             'link_text' => 'support@rentalskonekt.com',
-            'section' => 'footer'
+            'section' => 'footer',
         ]);
 
         Contact::create([
@@ -47,7 +49,7 @@ class ContactSeeder extends Seeder
             'label' => 'Facebook',
             'link' => 'https://www.facebook.com',
             'link_text' => 'facebook.com',
-            'section' => 'footer'
+            'section' => 'footer',
         ]);
 
         Contact::create([
@@ -55,7 +57,7 @@ class ContactSeeder extends Seeder
             'label' => 'X',
             'link' => 'https://www.x.com',
             'link_text' => 'x',
-            'section' => 'footer'
+            'section' => 'footer',
         ]);
 
         Contact::create([
@@ -63,7 +65,7 @@ class ContactSeeder extends Seeder
             'label' => 'Instagram',
             'link' => 'https://www.instagram.com',
             'link_text' => 'https://www.instagram.com',
-            'section' => 'footer'
+            'section' => 'footer',
         ]);
 
         Contact::create([
@@ -71,7 +73,7 @@ class ContactSeeder extends Seeder
             'label' => 'Linkedin',
             'link' => 'https://www.linkedin.com',
             'link_text' => 'https://www.linkedin.com',
-            'section' => 'footer'
+            'section' => 'footer',
         ]);
     }
 }

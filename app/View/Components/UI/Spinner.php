@@ -1,21 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\View\Components\UI;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Spinner extends Component
+final class Spinner extends Component
 {
-    public string $size;
-    public string $color;
-
-    public function __construct(string $size = '6', string $color = 'blue-500')
-    {
-        $this->size = $size;
-        $this->color = $color;
-    }
+    public function __construct(public string $size = '6', public string $color = 'blue-500') {}
 
     /**
      * Get the view / contents that represent the component.

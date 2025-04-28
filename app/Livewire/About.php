@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Models\About as ModelsAbout;
 use Illuminate\View\View;
 use Livewire\Component;
-use App\Models\About as ModelsAbout;
 
 final class About extends Component
 {

@@ -21,7 +21,8 @@ final class Property extends Component
     public ?ModelsProperty $property = null;
 
     private Collection|LengthAwarePaginator|null $properties = null;
-    private $searchResults = null;
+
+    private $searchResults;
 
     private PropertyService $propertyService;
 
@@ -32,8 +33,9 @@ final class Property extends Component
         $this->propertyService = $propertyService;
         $this->resolveClassAction = $resolveClassAction;
 
-        if (Request::is('property-details/*'))
+        if (Request::is('property-details/*')) {
             $this->property = $this->propertyService->findPropertyByRequestUrl(Request::url());
+        }
 
         $this->class = $this->resolveClassAction->execute(Request::path());
 

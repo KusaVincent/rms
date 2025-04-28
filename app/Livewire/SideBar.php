@@ -43,7 +43,7 @@ final class SideBar extends Component
         $this->locations = Location::select('id', 'town_city')->get();
         $this->propertyTypes = PropertyType::select('id', 'type_name')->get();
         $this->applyFilters();
-//        $this->results = Property::search($this->search)->get();
+        //        $this->results = Property::search($this->search)->get();
     }
 
     public function applyFilters(): void
