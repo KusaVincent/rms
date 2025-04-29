@@ -17,16 +17,12 @@ use Livewire\Component;
 final class Property extends Component
 {
     public string $class;
-
-    public ?ModelsProperty $property = null;
-
-    private Collection|LengthAwarePaginator|null $properties = null;
-
     private $searchResults;
-
+    private $filterResults;
+    public ?ModelsProperty $property = null;
     private PropertyService $propertyService;
-
     private ResolvePropertyClassAction $resolveClassAction;
+    private Collection|LengthAwarePaginator|null $properties = null;
 
     public function mount(PropertyService $propertyService, ResolvePropertyClassAction $resolveClassAction): void
     {
@@ -48,10 +44,17 @@ final class Property extends Component
         $this->searchResults = $results;
     }
 
+    #[On('filter-results')]
+    public function setFilterResults($results): void
+    {
+        $this->filterResults = $results;
+    }
+
     public function render(): View
     {
         return view('livewire.property', [
             'properties' => $this->properties,
+            'filterResults' => $this->filterResults,
             'searchResults' => $this->searchResults,
         ])->layout('tenant-entry');
     }

@@ -4,16 +4,17 @@
         @foreach ($items as $item)
             <li class="flex items-center mb-2">
                 <input
-                    type="checkbox"
-                    wire:model="selectedTypes"
-                    value="{{ $item->id }}"
-                    id="{{ $idPrefix . $item->id }}"
                     class="mr-2"
+                    type="checkbox"
+                    value="{{ $item->id }}"
+                    wire:change="{{ $idPrefix }}"
+                    id="{{ $idPrefix . $item->id }}"
+                    wire:model.debounce.300ms="{{ $idPrefix === 'updateSelectedLocations' ? 'selectedLocations' : 'selectedTypes' }}"
                 />
                 <label for="{{ $idPrefix . $item->id }}">
-                    @if($idPrefix == 'location')
+                    @if($idPrefix == 'updateSelectedLocations')
                         {{ $item->town_city }}
-                    @elseif($idPrefix == 'type')
+                    @elseif($idPrefix == 'updateSelectedTypes')
                         {{ $item->type_name }}
                     @endif
                 </label>

@@ -2,12 +2,12 @@
     <x-filter-list
         title="Select Rental Type"
         :items="$propertyTypes"
-        idPrefix="type"
+        idPrefix="updateSelectedTypes"
     />
 
     <x-filter-list
         title="Select Location"
         :items="$locations"
-        idPrefix="location"
+        idPrefix="updateSelectedLocations"
     />
 </aside>
