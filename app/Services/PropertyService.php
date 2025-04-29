@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Property;
+use App\Traits\Limitable;
 use App\Traits\Paginatable;
 use App\Traits\Selectable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Livewire\WithPagination;
 
 final class PropertyService
 {
-    use Paginatable, Selectable, WithPagination;
+    use Paginatable, Selectable, Limitable;
 
     public function findPropertyByRequestUrl(string $url): Property
     {
@@ -36,7 +36,7 @@ final class PropertyService
             return Property::select($this->selects())
                 ->with($this->relations())
                 ->orderBy('created_at', 'desc')
-                ->take(15)
+                ->take($this->limit())
                 ->get();
         }
 
@@ -75,7 +75,7 @@ final class PropertyService
             ->where('id', '!=', $property->id)
             ->with($this->relations())
             ->inRandomOrder()
-            ->take(5)
+            ->take($this->relatedLimit())
             ->get();
     }
 }

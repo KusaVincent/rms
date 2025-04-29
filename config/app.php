@@ -126,5 +126,7 @@ return [
     ],
 
     'paginate' => env('PROPERTY_PAGINATE', 24),
+    'property_number' => env('PROPERTY_NUMBER_PER_PAGE', 24),
+    'related_property' => env('PROPERTY_RELATED_NUMBER_PER_PAGE', 24),
 
 ];
