@@ -10,9 +10,11 @@
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"></circle>
+        stroke-width="4">
+    </circle>
     <path
         class="opacity-75"
         fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 100 8V4a8 8 0 01-8 8z"></path>
+        d="M4 12a8 8 0 018-8v4a4 4 0 100 8V4a8 8 0 01-8 8z">
+    </path>
 </svg>

@@ -1,8 +1,7 @@
 @props(['name', 'placeholder'])
 
 @php
-    $error_name = 'form.' . $name;
-    $model_name = 'form.' . $name;
+    $model_name = $error_name = 'form.' . $name;
 @endphp
 
 <div>
@@ -11,6 +10,6 @@
     </x-form.input>
 
     @error($error_name)
-    <span class="text-red-500 text-sm">{{ $message }}</span>
+        <span class="text-red-500 text-sm">{{ $message }}</span>
     @enderror
 </div>

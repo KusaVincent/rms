@@ -5,24 +5,26 @@ declare(strict_types=1);
 namespace App\Livewire\Forms;
 
 use App\Models\CustomerSupport;
+use App\Notifications\CustomerSupportAcknowledgement;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
 final class ContactForm extends Form
 {
-    #[Validate('required')]
+    #[Validate('required|string')]
     public string $name;
 
     #[Validate('required|email')]
     public string $email;
 
-    #[Validate('required')]
+    #[Validate('required|string')]
     public string $subject;
 
-    #[Validate('required')]
+    #[Validate('required|string')]
     public string $message;
 
-    #[Validate('required|min:10|max:12')]
+    #[Validate('required|string|min:10|max:12')]
     public string $phone_number;
 
     public function store(): void
@@ -30,5 +32,8 @@ final class ContactForm extends Form
         $this->validate();
 
         CustomerSupport::create($this->all());
+
+        Notification::route('mail', $this->email)
+            ->notify(new CustomerSupportAcknowledgement());
     }
 }
