@@ -12,7 +12,7 @@ use Livewire\Form;
 
 final class ContactForm extends Form
 {
-    #[Validate('required|string')]
+    #[Validate('required|string|min:3')]
     public string $name;
 
     #[Validate('required|email')]
@@ -31,9 +31,9 @@ final class ContactForm extends Form
     {
         $this->validate();
 
-        CustomerSupport::create($this->all());
+        $support = CustomerSupport::create($this->all());
 
         Notification::route('mail', $this->email)
-            ->notify(new CustomerSupportAcknowledgement());
+            ->notify(new CustomerSupportAcknowledgement($support));
     }
 }
