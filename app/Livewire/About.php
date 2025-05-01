@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Models\About as ModelsAbout;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class About extends Component

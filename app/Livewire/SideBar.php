@@ -17,9 +17,13 @@ final class SideBar extends Component
     use Limitable, Selectable;
 
     public $locations = [];
+
     public $propertyTypes = [];
+
     public Collection $results;
+
     public array $selectedTypes = [];
+
     public array $selectedLocations = [];
 
     public function mount(): void
@@ -44,11 +48,11 @@ final class SideBar extends Component
         $query = Property::query();
         $query->select($this->selects());
 
-        if (!empty($this->selectedLocations)) {
+        if ($this->selectedLocations !== []) {
             $query->whereIn('location_id', $this->selectedLocations);
         }
 
-        if (!empty($this->selectedTypes)) {
+        if ($this->selectedTypes !== []) {
             $query->whereIn('property_type_id', $this->selectedTypes);
         }
 

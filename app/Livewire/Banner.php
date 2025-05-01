@@ -18,6 +18,9 @@ final class Banner extends Component
         [$this->bannerHeight, $this->backgroundImage] = $this->determineBannerAttributes($request->path());
     }
 
+    /**
+     * @return array<string>
+     */
     private function determineBannerAttributes(string $path): array
     {
         return match ($path) {

@@ -10,6 +10,6 @@
     />
 
     <div wire:loading class="absolute top-2 right-2">
-        <x-ui.spinner size="8" color="blue-700" />
+        <x-ui.search-spinner size="8" color="blue-700" />
     </div>
 </div>

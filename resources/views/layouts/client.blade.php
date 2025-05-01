@@ -16,8 +16,10 @@
         <link rel="shortcut icon" href="{{ asset('storage/favicon.png') }}" type=" image/x-icon">
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {!! ToastMagic::styles() !!}
     </head>
     <body class="font-sans text-gray-900 antialiased bg-gray-50 text-black/50 dark:bg-black dark:text-white/50 min-h-screen flex flex-col scroll-smooth">
         {{ $slot }}
+        {!! ToastMagic::scripts() !!}
     </body>
 </html>

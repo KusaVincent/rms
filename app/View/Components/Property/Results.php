@@ -1,12 +1,13 @@
 <?php
 
-namespace App\View\Components\property;
+declare(strict_types=1);
 
-use Closure;
+namespace App\View\Components\Property;
+
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Results extends Component
+final class Results extends Component
 {
     /**
      * Create a new component instance.
@@ -19,7 +20,7 @@ class Results extends Component
     /**
      * Get the view / contents that represent the component.
      */
-    public function render(): View|Closure|string
+    public function render(): View
     {
         return view('components.property.results');
     }

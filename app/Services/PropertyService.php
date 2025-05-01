@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 
 final class PropertyService
 {
-    use Paginatable, Selectable, Limitable;
+    use Limitable, Paginatable, Selectable;
 
     public function findPropertyByRequestUrl(string $url): Property
     {

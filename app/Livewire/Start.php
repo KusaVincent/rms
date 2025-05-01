@@ -6,7 +6,7 @@ namespace App\Livewire;
 
 use App\Models\Property;
 use App\Traits\ChecksServiceAvailability;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class Start extends Component

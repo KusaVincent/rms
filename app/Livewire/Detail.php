@@ -6,7 +6,7 @@ namespace App\Livewire;
 
 use App\Models\Property;
 use App\Traits\Selectable;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class Detail extends Component

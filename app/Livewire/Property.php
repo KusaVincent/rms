@@ -8,20 +8,29 @@ use App\Actions\ResolvePropertyClassAction;
 use App\Models\Property as ModelsProperty;
 use App\Services\PropertyService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Request;
-use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Property extends Component
 {
     public string $class;
-    private $searchResults;
-    private $filterResults;
+
     public ?ModelsProperty $property = null;
+
+    private $searchResults;
+
+    private $filterResults;
+
     private PropertyService $propertyService;
+
     private ResolvePropertyClassAction $resolveClassAction;
+
+    /**
+     * @returns LengthAwarePaginator<int, ModelsProperty>
+     * */
     private Collection|LengthAwarePaginator|null $properties = null;
 
     public function mount(PropertyService $propertyService, ResolvePropertyClassAction $resolveClassAction): void

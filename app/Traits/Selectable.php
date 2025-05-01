@@ -8,6 +8,9 @@ trait Selectable
 {
     public bool $isCalledFromDetail = false;
 
+    /**
+     * @return array<string>
+     */
     public function selects(bool $created_at = false): array
     {
         $selects = ['id', 'property_name', 'rent', 'property_image', 'location_id', 'property_type_id'];
@@ -23,6 +26,9 @@ trait Selectable
         return $selects;
     }
 
+    /**
+     * @return array<string>
+     */
     public function relations(bool $includeAmenities = false): array
     {
         $relations = [

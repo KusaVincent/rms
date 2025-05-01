@@ -6,7 +6,6 @@ namespace App\Livewire;
 
 use App\Models\Property;
 use App\Traits\Limitable;
-use App\Traits\Paginatable;
 use App\Traits\Selectable;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Url;
@@ -14,7 +13,7 @@ use Livewire\Component;
 
 final class Search extends Component
 {
-    use Selectable, Limitable;
+    use Limitable, Selectable;
 
     #[Url()]
     public string $search = '';
