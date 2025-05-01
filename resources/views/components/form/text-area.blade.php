@@ -6,7 +6,8 @@
             wire:model="form.message"
             placeholder="Write message"
             class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            rows="5"></textarea>
+            rows="5">
+        </textarea>
     </label>
     @error('form.message')
     <span class="text-red-500 text-sm">{{ $message }}</span>
