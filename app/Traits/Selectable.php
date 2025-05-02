@@ -44,6 +44,7 @@ trait Selectable
             return array_merge($relations, [
                 'location:id,address,town_city,area,map',
                 'amenities:id,amenity_name,amenity_icon,amenity_icon_color,amenity_description',
+                'propertyMedia:id,property_id,image_one,image_two,image_three,image_four,image_five,video',
             ]);
         }
 
