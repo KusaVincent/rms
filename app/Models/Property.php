@@ -99,7 +99,7 @@ final class Property extends Model
         return $this->hasMany(Maintenance::class);
     }
 
-    public function propertyMedia() : HasOne
+    public function propertyMedia(): HasOne
     {
         return $this->hasOne(PropertyMedia::class);
     }
