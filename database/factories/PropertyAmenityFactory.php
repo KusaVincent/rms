@@ -6,10 +6,11 @@ namespace Database\Factories;
 
 use App\Models\Amenity;
 use App\Models\Property;
+use App\Models\PropertyAmenity;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends Factory<PropertyAmenity>
  */
 final class PropertyAmenityFactory extends Factory
 {

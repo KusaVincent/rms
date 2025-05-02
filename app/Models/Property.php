@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
@@ -96,5 +97,10 @@ final class Property extends Model
     public function maintenance(): HasMany
     {
         return $this->hasMany(Maintenance::class);
+    }
+
+    public function propertyMedia() : HasOne
+    {
+        return $this->hasOne(PropertyMedia::class);
     }
 }

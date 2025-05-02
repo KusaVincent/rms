@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\Property;
+use App\Models\Tenant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +17,12 @@ return new class extends Migration
     {
         Schema::create('maintenances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('property_id')->constrained()->onDelete('cascade');
-            $table->foreignId('tenant_id')->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Property::class)
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->foreignIdFor(Tenant::class)
+                ->constrained()
+                ->cascadeOnDelete();
             $table->text('description');
             $table->enum('status', ['Pending', 'In Progress', 'Completed'])->default('Pending');
             $table->date('request_date');

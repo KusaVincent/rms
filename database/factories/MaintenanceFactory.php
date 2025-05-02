@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\Maintenance;
 use App\Models\Property;
 use App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Maintenance>
+ * @extends Factory<Maintenance>
  */
 final class MaintenanceFactory extends Factory
 {
