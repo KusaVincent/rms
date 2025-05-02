@@ -1,12 +1,11 @@
 <?php
 
-namespace Components\UI;
+namespace App\View\Components\UI;
 
-use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ZoomModal extends Component
+class PropertyImageDisplay extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +20,6 @@ class ZoomModal extends Component
      */
     public function render(): View
     {
-        return view('components.ui.zoom-modal');
+        return view('components.ui.property-image-display');
     }
 }
