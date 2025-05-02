@@ -11,7 +11,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div class="lg:col-span-3">
             <x-ui.image-display src="{{ asset('storage/property/' . $property->property_image) }}" alt="Property Image" />
-
+            <x-ui.property-media :media="$property"/>
             <x-property.property-details
                 rent="{{ $property->rent }}"
                 description="{{ $property->description }}"
