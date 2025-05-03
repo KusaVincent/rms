@@ -29,16 +29,16 @@ final class Property extends Model
     //    use SoftDeletes;
     //    use CascadeSoftDeletes;
 
-    protected $fillable = [
-        'rent',
-        'deposit',
-        'location_id',
-        'description',
-        'availability',
-        'property_name',
-        'property_image',
-        'property_type_id',
-    ];
+//    protected $fillable = [
+//        'rent',
+//        'deposit',
+//        'location_id',
+//        'description',
+//        'availability',
+//        'property_name',
+//        'property_image',
+//        'property_type_id',
+//    ];
 
     /**
      * Get the name of the index associated with the model.

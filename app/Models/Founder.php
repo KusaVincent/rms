@@ -12,7 +12,7 @@ final class Founder extends Model
 {
     use HasFactory, softDeletes;
 
-    protected $fillable = ['name', 'image', 'social_media'];
+//    protected $fillable = ['name', 'image', 'social_media'];
 
     protected $casts = [
         'social_media' => 'json:unicode',

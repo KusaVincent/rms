@@ -18,7 +18,7 @@ final class Tenant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['first_name', 'last_name', 'middle_name', 'email', 'phone', 'password'];
+//    protected $fillable = ['first_name', 'last_name', 'middle_name', 'email', 'phone', 'password'];
 
     /**
      * @return HasMany<LeaseAgreement, Tenant>

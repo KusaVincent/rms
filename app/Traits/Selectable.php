@@ -31,6 +31,14 @@ trait Selectable
      */
     public function relations(bool $includeAmenities = false): array
     {
+        if ($this->isCalledFromDetail) {
+            return [
+                'location:id,town_city,area,address,map',
+                'amenities:id,amenity_name,amenity_icon,amenity_icon_color,amenity_description',
+                'propertyMedia:id,property_id,image_one,image_two,image_three,image_four,image_five,video',
+            ];
+        }
+
         $relations = [
             'location:id,town_city,area',
             'propertyType:id,type_name',
@@ -38,14 +46,6 @@ trait Selectable
 
         if ($includeAmenities) {
             $relations[] = 'amenities:id,amenity_name';
-        }
-
-        if ($this->isCalledFromDetail) {
-            return array_merge($relations, [
-                'location:id,address,town_city,area,map',
-                'amenities:id,amenity_name,amenity_icon,amenity_icon_color,amenity_description',
-                'propertyMedia:id,property_id,image_one,image_two,image_three,image_four,image_five,video',
-            ]);
         }
 
         return $relations;

@@ -12,14 +12,14 @@ final class Maintenance extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'property_id',
-        'tenant_id',
-        'description',
-        'status',
-        'request_date',
-        'completion_date',
-    ];
+//    protected $fillable = [
+//        'property_id',
+//        'tenant_id',
+//        'description',
+//        'status',
+//        'request_date',
+//        'completion_date',
+//    ];
 
     public function property(): BelongsTo
     {

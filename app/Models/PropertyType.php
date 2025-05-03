@@ -12,7 +12,7 @@ final class PropertyType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type_name'];
+//    protected $fillable = ['type_name'];
 
     public function properties(): HasMany
     {

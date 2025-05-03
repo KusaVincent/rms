@@ -30,6 +30,7 @@ final class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             PropertySeeder::class,
             TenantSeeder::class,
+            PropertyMediaSeeder::class,
             LeaseAgreementSeeder::class,
             MaintenanceSeeder::class,
             PropertyAmenitySeeder::class,

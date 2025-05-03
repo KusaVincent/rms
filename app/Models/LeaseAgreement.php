@@ -13,15 +13,15 @@ final class LeaseAgreement extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'tenant_id',
-        'property_id',
-        'lease_start_date',
-        'lease_end_date',
-        'rent_amount',
-        'deposit_amount',
-        'lease_term',
-    ];
+//    protected $fillable = [
+//        'tenant_id',
+//        'property_id',
+//        'lease_start_date',
+//        'lease_end_date',
+//        'rent_amount',
+//        'deposit_amount',
+//        'lease_term',
+//    ];
 
     public function tenant(): BelongsTo
     {
