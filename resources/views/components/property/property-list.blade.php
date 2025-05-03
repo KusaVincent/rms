@@ -1,4 +1,5 @@
 @props(['properties'])
+
 <div>
     @switch(true)
         @case(Request::is('property-details/*'))

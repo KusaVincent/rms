@@ -18,7 +18,6 @@
                 size="{{ $property->propertyType->type_name }}"
                 location="{{ $property->location->address }}, {{ $property->location->town_city }},  {{ $property->location->area }}."
             />
-
             <x-ui.feature :features="collect($property->amenities)->mapWithKeys(function($amenity) {
                  return [
                     $amenity->amenity_name => [
@@ -28,14 +27,11 @@
                     ],
                  ];
             })->toArray()" />
-
-            <x-ui.map mapUrl="{{ $property->location->map ?? '' }}" />
-
+            <x-ui.map mapUrl="{{ $property->location->map }}" />
             @auth
                 <x-buttons.contact-button />
             @endauth
         </div>
-
         <x-property.property-details-sidebar />
     </div>
 </section>
