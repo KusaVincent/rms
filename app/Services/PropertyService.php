@@ -23,7 +23,7 @@ final class PropertyService
         $propertyId = $matches[1] ?? null;
 
         return $propertyId !== null && $propertyId !== '0'
-            ? Property::with(['location', 'amenities', 'propertyType'])->findOrFail($propertyId)
+            ? Property::available()->with(['location', 'amenities', 'propertyType'])->findOrFail($propertyId)
             : new Property;
     }
 
@@ -34,6 +34,7 @@ final class PropertyService
     {
         if ($path === '/') {
             return Property::select($this->selects())
+                ->available()
                 ->with($this->relations())
                 ->orderBy('created_at', 'desc')
                 ->take($this->limit())
@@ -42,6 +43,7 @@ final class PropertyService
 
         if ($path === 'properties') {
             return Property::select($this->selects())
+                ->available()
                 ->with($this->relations())
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->getPerPage(), pageName: 'properties-page');
@@ -69,6 +71,7 @@ final class PropertyService
 
         return $query
             ->select($this->selects(true))
+            ->available()
             ->whereHas('propertyType', function ($query) use ($property): void {
                 $query->where('id', $property->property_type_id);
             })

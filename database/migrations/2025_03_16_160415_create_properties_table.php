@@ -23,12 +23,12 @@ return new class extends Migration
             $table->foreignIdFor(Location::class)
                 ->constrained()
                 ->cascadeOnDelete();
-            $table->string('property_name');
+            $table->string('name');
             $table->text('description');
             $table->text('property_image');
             $table->integer('rent');
             $table->integer('deposit');
-            $table->boolean('availability')->default(true);
+            $table->boolean('available')->default(true);
             $table->timestamps();
         });
     }

@@ -7,7 +7,7 @@
         @foreach ($results as $result)
             <x-ui.card
                 :rent="$result['rent']"
-                :title="$result['property_name']"
+                :title="$result['name']"
                 :link="route('details', ['id' => $result['id']])"
                 :propertyType="$result['property_type']['type_name'] ?? ''"
                 :location="$result['location']['town_city'] . ', ' . ($result['location']['area'] ?? '')"

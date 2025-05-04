@@ -10,7 +10,7 @@
                         <img src="{{ asset('storage/property/' . ($property->property_image ?? 'default.jpg')) }}"
                              alt="Property Image" class="w-20 h-20 object-cover rounded">
                         <div>
-                            <h6 class="text-blue-600 font-semibold">{{ $property->property_name }}</h6>
+                            <h6 class="text-blue-600 font-semibold">{{ $property->name }}</h6>
                             <p class="text-sm text-gray-600">
                                 {{ __('Posted') }}: {{ $property->created_at->diffForHumans() }}
                             </p>

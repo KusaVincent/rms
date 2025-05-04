@@ -20,6 +20,7 @@ final class Detail extends Component
         $this->isCalledFromDetail = true;
 
         $this->property = Property::select($this->selects())
+            ->available()
             ->with($this->relations())
             ->findOrFail($id);
     }

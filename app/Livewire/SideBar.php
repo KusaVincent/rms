@@ -30,7 +30,6 @@ final class SideBar extends Component
     {
         $this->locations = Location::select('id', 'town_city')->get();
         $this->propertyTypes = PropertyType::select('id', 'type_name')->get();
-        $this->applyFilters();
     }
 
     public function updateSelectedLocations(): void
@@ -46,7 +45,8 @@ final class SideBar extends Component
     public function applyFilters(): void
     {
         $query = Property::query();
-        $query->select($this->selects());
+        $query->select($this->selects())
+            ->available();
 
         if ($this->selectedLocations !== []) {
             $query->whereIn('location_id', $this->selectedLocations);

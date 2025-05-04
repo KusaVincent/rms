@@ -13,7 +13,7 @@ trait Selectable
      */
     public function selects(bool $created_at = false): array
     {
-        $selects = ['id', 'property_name', 'rent', 'property_image', 'location_id', 'property_type_id'];
+        $selects = ['id', 'name', 'rent', 'property_image', 'location_id', 'property_type_id'];
 
         if ($created_at) {
             $selects[] = 'created_at';

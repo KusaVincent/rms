@@ -22,14 +22,14 @@ final class PropertyFactory extends Factory
     public function definition(): array
     {
         return [
-            'property_type_id' => PropertyType::inRandomOrder()->first()->id,
+            'property_type_id' => PropertyType::inRandomOrder()->first()->id ?? PropertyType::factory(),
             'location_id' => Location::inRandomOrder()->first()->id ?? Location::factory(),
-            'property_name' => $this->faker->words(3, true),
+            'name' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
             'property_image' => 'prop.jpg',
             'rent' => $this->faker->numberBetween(15000, 500000),
             'deposit' => $this->faker->numberBetween(15000, 500000),
-            'availability' => $this->faker->boolean(),
+            'available' => $this->faker->boolean(),
         ];
     }
 }

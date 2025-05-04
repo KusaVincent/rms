@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Dyrynda\Database\Support\CascadeSoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
 
 /**
@@ -34,11 +33,16 @@ final class Property extends Model
 //        'deposit',
 //        'location_id',
 //        'description',
-//        'availability',
-//        'property_name',
+//        'available',
+//        'name',
 //        'property_image',
 //        'property_type_id',
 //    ];
+
+    public function scopeAvailable(Builder $query): void
+    {
+        $query->where('available', true);
+    }
 
     /**
      * Get the name of the index associated with the model.

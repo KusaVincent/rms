@@ -1,10 +1,10 @@
 <section class="container mx-auto py-8">
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-800">{{ $property->property_name }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800">{{ $property->name }}</h1>
         <x-property.property-details-breadcrumb :breadcrumbs="[
             ['label' => 'Home', 'route' => route('home')],
             ['label' => 'Properties', 'route' => route('properties')],
-            ['label' => $property->property_name],
+            ['label' => $property->name],
         ]" />
     </div>
 
