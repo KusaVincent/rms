@@ -15,7 +15,7 @@ final class Search extends Component
 {
     use Limitable, Selectable;
 
-    #[Url()]
+    #[Url(except: '')]
     public string $search = '';
 
     public Collection $results;
@@ -26,7 +26,7 @@ final class Search extends Component
 
         if ($this->search !== '' && $this->search !== '0') {
             $this->results = Property::select($this->selects())
-                ->available()
+                ->isAvailable()
                 ->whereIn('id', Property::search($this->search)->get()->pluck('id'))
                 ->with($this->relations())
                 ->take($this->limit())

@@ -11,6 +11,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -38,13 +39,14 @@ final class Property extends Component
         $this->propertyService = $propertyService;
         $this->resolveClassAction = $resolveClassAction;
 
-        if (Request::is('property-details/*')) {
-            $this->property = $this->propertyService->findPropertyByRequestUrl(Request::url());
+        if (Route::currentRouteName() === 'details') {
+            $id = Request::route('id');
+            $this->property = $this->propertyService->findPropertyById($id);
         }
 
-        $this->class = $this->resolveClassAction->execute(Request::path());
+        $this->class = $this->resolveClassAction->execute(Route::currentRouteName());
 
-        $this->properties = $this->propertyService->resolveProperties(Request::path(), $this->property);
+        $this->properties = $this->propertyService->resolveProperties(Route::currentRouteName(), $this->property);
     }
 
     #[On('search-results')]

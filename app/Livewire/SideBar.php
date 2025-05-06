@@ -46,7 +46,7 @@ final class SideBar extends Component
     {
         $query = Property::query();
         $query->select($this->selects())
-            ->available();
+            ->isAvailable();
 
         if ($this->selectedLocations !== []) {
             $query->whereIn('location_id', $this->selectedLocations);

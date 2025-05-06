@@ -2,10 +2,10 @@
 
 <div>
     @switch(true)
-        @case(Request::is('property-details/*'))
+        @case(Route::currentRouteName() === 'details')
             <x-property.related-properties :properties="$properties" />
             @break
-        @case(Request::is('/'))
+        @case(Route::currentRouteName() === 'home')
             <x-property.property-section
                 :properties="$properties"
                 design="col-span-12 lg:col-span-10"
@@ -13,7 +13,7 @@
                 gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
             />
             @break
-        @case(Request::is('properties'))
+        @case(Route::currentRouteName() === 'properties')
             <x-property.paginated-property :properties="$properties" />
             @break
         @default

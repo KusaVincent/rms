@@ -12,7 +12,7 @@ final class Amenity extends Model
 {
     use HasFactory;
 
-//    protected $fillable = ['amenity_name', 'amenity_description'];
+    //    protected $fillable = ['amenity_name', 'amenity_description'];
 
     public function properties(): BelongsToMany
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Property;
@@ -9,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<PropertyMedia>
  */
-class PropertyMediaFactory extends Factory
+final class PropertyMediaFactory extends Factory
 {
     protected array $images = ['prop.jpg', 'property.jpg'];
 
@@ -18,7 +20,6 @@ class PropertyMediaFactory extends Factory
      *
      * @return array<string, mixed>
      */
-
     public function definition(): array
     {
         return [

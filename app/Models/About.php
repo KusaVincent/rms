@@ -12,5 +12,5 @@ final class About extends Model
 {
     use HasFactory, softDeletes;
 
-//    protected $fillable = ['title', 'content'];
+    //    protected $fillable = ['title', 'content'];
 }

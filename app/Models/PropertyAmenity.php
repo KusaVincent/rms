@@ -17,7 +17,7 @@ final class PropertyAmenity extends Model
      *
      * @var string[]
      */
-//    protected $fillable = ['property_id','amenity_id'];
+    //    protected $fillable = ['property_id','amenity_id'];
 
     /**
      * Relationships.

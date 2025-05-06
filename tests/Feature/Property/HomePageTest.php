@@ -1,6 +1,8 @@
 <?php
 
-test('the homepage is loading', function () {
+declare(strict_types=1);
+
+test('the homepage is loading', function (): void {
     $response = $this->get('/');
 
     $response->assertStatus(200);

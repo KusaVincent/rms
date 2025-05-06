@@ -16,14 +16,14 @@ final class PropertyService
 {
     use Limitable, Paginatable, Selectable;
 
-    public function findPropertyByRequestUrl(string $url): Property
+    public function findPropertyById(string $propertyId): Property
     {
-        preg_match('/\/property-details\/(\d+)/', $url, $matches);
+        // preg_match('/\/property-details\/(\d+)/', $url, $matches);
 
-        $propertyId = $matches[1] ?? null;
+        // $propertyId = $matches[1] ?? null;
 
-        return $propertyId !== null && $propertyId !== '0'
-            ? Property::available()->with(['location', 'amenities', 'propertyType'])->findOrFail($propertyId)
+        return $propertyId !== '0'
+            ? Property::isAvailable()->with(['location', 'amenities', 'propertyType'])->findOrFail($propertyId)
             : new Property;
     }
 
@@ -32,9 +32,9 @@ final class PropertyService
      */
     public function resolveProperties(string $path, ?Property $property): Collection|LengthAwarePaginator
     {
-        if ($path === '/') {
+        if ($path === 'home') {
             return Property::select($this->selects())
-                ->available()
+                ->isAvailable()
                 ->with($this->relations())
                 ->orderBy('created_at', 'desc')
                 ->take($this->limit())
@@ -43,13 +43,13 @@ final class PropertyService
 
         if ($path === 'properties') {
             return Property::select($this->selects())
-                ->available()
+                ->isAvailable()
                 ->with($this->relations())
                 ->orderBy('created_at', 'desc')
                 ->paginate($this->getPerPage(), pageName: 'properties-page');
         }
 
-        if (str_starts_with($path, 'property-details/')) {
+        if ($path === 'details') {
             return $this->getRelatedProperties($property);
         }
 
@@ -71,11 +71,11 @@ final class PropertyService
 
         return $query
             ->select($this->selects(true))
-            ->available()
+            ->isAvailable()
             ->whereHas('propertyType', function ($query) use ($property): void {
                 $query->where('id', $property->property_type_id);
             })
-            ->where('id', '!=', $property->id)
+            ->whereNot('id', $property->id)
             ->with($this->relations())
             ->inRandomOrder()
             ->take($this->relatedLimit())

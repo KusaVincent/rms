@@ -11,7 +11,7 @@ final class ServiceAvailability extends Model
 {
     use HasFactory;
 
-//    protected $fillable = ['service_key', 'is_active', 'service_name'];
+    //    protected $fillable = ['service_key', 'is_active', 'service_name'];
 
     protected $casts = [
         'is_active' => 'boolean',

@@ -12,5 +12,5 @@ final class Contact extends Model
 {
     use HasFactory, SoftDeletes;
 
-//    protected $fillable = ['icon', 'label', 'link', 'link_text'];
+    //    protected $fillable = ['icon', 'label', 'link', 'link_text'];
 }

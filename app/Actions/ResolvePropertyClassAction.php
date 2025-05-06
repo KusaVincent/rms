@@ -8,13 +8,13 @@ final class ResolvePropertyClassAction
 {
     public function execute(string $path): string
     {
-        if ($path === '/') {
+        if ($path === 'home') {
             return 'col-span-12 lg:col-span-10';
         }
         if ($path === 'properties') {
             return 'col-span-12 lg:col-span-12';
         }
-        if (str_starts_with($path, 'property-details/')) {
+        if ($path === 'details') {
             return 'mb-8';
         }
 

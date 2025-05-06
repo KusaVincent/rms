@@ -18,16 +18,15 @@ final class Contact extends Component
     {
         $this->form->store();
 
-        session()->flash('message', 'Your message has been sent successfully!');
-        ToastMagic::success('Your message has been sent successfully!');
+        //        ToastMagic::success('Your message has been sent successfully!');
 
-        return $this->redirect('/contact');
+        return redirect()->back()->with('message', 'Your message has been sent successfully!');
     }
 
     public function render(): View
     {
         return view('livewire.contact', [
-            'contacts' => ModelsContact::where('section', '!=', 'footer')->get(),
+            'contacts' => ModelsContact::whereNot('section', 'footer')->get(),
         ]);
     }
 }

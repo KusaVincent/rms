@@ -7,6 +7,7 @@ namespace App\Livewire\Welcome;
 use App\Models\Contact;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
 final class Footer extends Component
@@ -17,7 +18,7 @@ final class Footer extends Component
     {
         $this->margin = '';
 
-        if (Request::is('/') || Request::is('properties')) {
+        if (Route::currentRouteName() === 'home' || Route::currentRouteName() === 'properties') {
             $this->margin = 'mt-10';
         }
     }
@@ -25,8 +26,7 @@ final class Footer extends Component
     public function render(): View
     {
         return view('livewire.welcome.footer', [
-
-            'contacts' => Contact::where('section', '!=', 'contact')->get(),
+            'contacts' => Contact::whereNot('section', 'contact')->get(),
         ]);
     }
 }

@@ -28,18 +28,18 @@ final class Property extends Model
     //    use SoftDeletes;
     //    use CascadeSoftDeletes;
 
-//    protected $fillable = [
-//        'rent',
-//        'deposit',
-//        'location_id',
-//        'description',
-//        'available',
-//        'name',
-//        'property_image',
-//        'property_type_id',
-//    ];
+    //    protected $fillable = [
+    //        'rent',
+    //        'deposit',
+    //        'location_id',
+    //        'description',
+    //        'available',
+    //        'name',
+    //        'property_image',
+    //        'property_type_id',
+    //    ];
 
-    public function scopeAvailable(Builder $query): void
+    public function scopeIsAvailable(Builder $query): void
     {
         $query->where('available', true);
     }
