@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @template TFactory of Factory
  *
  * @mixin Model
+ *
  * @method static inRandomOrder()
  */
 final class Tenant extends Model

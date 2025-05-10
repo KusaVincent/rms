@@ -66,16 +66,12 @@
             "@php artisan migrate --graceful --ansi"
         ],
         "dev": "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'",
-        "clear-caches": [
-            "php artisan config:clear",
-            "php artisan view:clear",
-            "php artisan cache:clear",
-            "php artisan config:cache"
-        ],
+        "clear-caches": "php artisan view:clear && php artisan config:clear && php artisan cache:clear && php artisan config:cache",
         "run-tools": [
             "./vendor/bin/pint",
             "./vendor/bin/rector"
-        ]
+        ],
+        "start": "concurrently \"php artisan queue:listen --queue=queue1\" \"php artisan queue:listen --queue=queue2\" \"php artisan queue:listen --queue=queue3\" \"npm run dev\""
     },
     "extra": {
         "laravel": {

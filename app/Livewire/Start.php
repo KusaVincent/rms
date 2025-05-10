@@ -6,8 +6,10 @@ namespace App\Livewire;
 
 use App\Models\Property;
 use App\Traits\ChecksServiceAvailability;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 final class Start extends Component
@@ -27,9 +29,16 @@ final class Start extends Component
             return view('livewire.empty');
         }
 
-        $saleStart = Cache::remember('sale_start_count', now()->addMinutes(60 * 24), function () {
-            return Property::count();
-        });
+        try {
+            $saleStart = Cache::remember(
+                'sale_start_count',
+                now()->addDay(),
+                fn () => Property::count()
+            );
+        } catch (Exception $e) {
+            Log::error('Error fetching property count: '.$e->getMessage());
+            $saleStart = 0;
+        }
 
         $agentStart = $saleStart;
         $listingStart = $saleStart;

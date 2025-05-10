@@ -7,6 +7,8 @@ namespace App\Livewire;
 use App\Models\Founder as ModelsFounder;
 use App\Traits\ChecksServiceAvailability;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 final class Founder extends Component
@@ -26,7 +28,18 @@ final class Founder extends Component
             return view('livewire.empty');
         }
 
-        $founders = ModelsFounder::all();
+        try {
+            $founders = Cache::remember('founders', now()->addYear(), fn () => ModelsFounder::all());
+        } catch (\Exception $e) {
+            Log::error("Failed to fetch founders: {$e->getMessage()}");
+
+            try {
+                $founders = ModelsFounder::all();
+            } catch (\Exception $dbException) {
+                $founders = collect();
+                Log::error("Failed to fetch founders from the database: {$dbException->getMessage()}");
+            }
+        }
 
         return view('livewire.founder', [
             'founders' => $founders,

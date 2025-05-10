@@ -7,11 +7,15 @@ namespace App\Livewire;
 use App\Actions\ResolvePropertyClassAction;
 use App\Models\Property as ModelsProperty;
 use App\Services\PropertyService;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use InvalidArgumentException;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -32,17 +36,39 @@ final class Property extends Component
 
     public function mount(PropertyService $propertyService, ResolvePropertyClassAction $resolveClassAction): void
     {
-        $propertyService1 = $propertyService;
-        $resolveClassAction1 = $resolveClassAction;
+        $routeName = Route::currentRouteName();
 
-        if (Route::currentRouteName() === 'details') {
-            $id = Request::route('id');
-            $this->property = $propertyService1->findPropertyById($id);
+        try {
+            $propertyService1 = $propertyService;
+            $resolveClassAction1 = $resolveClassAction;
+
+            if ($routeName === 'details') {
+                $id = Request::route('id');
+
+                if (! is_numeric($id) || (int) $id <= 0) {
+                    throw new InvalidArgumentException("Invalid property ID provided: {$id}");
+                }
+
+                $id = (int) $id;
+                $this->property = $propertyService1->findPropertyById($id);
+
+                if (!$this->property instanceof ModelsProperty) {
+                    Log::warning("Property not found for ID: {$id}");
+                    $this->redirectRoute($routeName, navigate: true);
+                }
+            }
+
+            $this->class = $resolveClassAction1->execute($routeName);
+            $this->properties = $propertyService1->resolveProperties($routeName, $this->property);
+        } catch (InvalidArgumentException $e) {
+            ToastMagic::error('Invalid property identifier provided.');
+            Log::warning('Invalid argument encountered: '.$e->getMessage());
+            $this->redirectRoute($routeName, navigate: true);
+        } catch (Exception $e) {
+            Log::error('An error occurred in mount: '.$e->getMessage());
+            ToastMagic::error('Something went wrong. Please try again later.');
+            $this->redirectRoute($routeName, navigate: true);
         }
-
-        $this->class = $resolveClassAction1->execute(Route::currentRouteName());
-
-        $this->properties = $propertyService1->resolveProperties(Route::currentRouteName(), $this->property);
     }
 
     #[On('search-results')]
