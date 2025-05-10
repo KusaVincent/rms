@@ -9,7 +9,7 @@
             <x-property.property-section
                 :properties="$properties"
                 design="col-span-12 lg:col-span-10"
-                title="Newly Listed Rental Properties"
+                title=" "
                 gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
             />
             @break

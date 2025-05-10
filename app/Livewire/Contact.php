@@ -8,13 +8,14 @@ use App\Livewire\Forms\ContactForm;
 use App\Models\Contact as ModelsContact;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Livewire\Component;
 
 final class Contact extends Component
 {
     public ContactForm $form;
 
-    public function save()
+    public function save(): RedirectResponse
     {
         $this->form->store();
 

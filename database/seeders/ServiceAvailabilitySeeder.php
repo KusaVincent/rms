@@ -14,16 +14,21 @@ final class ServiceAvailabilitySeeder extends Seeder
      */
     public function run(): void
     {
-        ServiceAvailability::create([
-            'service_key' => 'meet_the_team',
-            'is_active' => false,
-            'service_name' => 'Founder Module',
-        ]);
+        $serviceAvailabilities = [
+            [
+                'service_key' => 'meet_the_team',
+                'is_active' => false,
+                'service_name' => 'Founder Module',
+            ],
+            [
+                'service_key' => 'starts',
+                'is_active' => true,
+                'service_name' => 'company starts',
+            ],
+        ];
 
-        ServiceAvailability::create([
-            'service_key' => 'starts',
-            'is_active' => false,
-            'service_name' => 'company starts',
-        ]);
+        foreach ($serviceAvailabilities as $serviceAvailability) {
+            ServiceAvailability::create($serviceAvailability);
+        }
     }
 }

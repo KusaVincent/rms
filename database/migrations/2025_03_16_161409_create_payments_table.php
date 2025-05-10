@@ -20,7 +20,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
             $table->date('payment_date');
-            $table->decimal('payment_amount', 10, 2);
+            $table->decimal('payment_amount', 10);
             $table->string('payment_method');
             $table->timestamps();
         });

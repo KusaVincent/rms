@@ -22,8 +22,8 @@ final class PropertyTypeSeeder extends Seeder
             ['type_name' => 'Townhouse'],
         ];
 
-        foreach ($propertyTypes as $type) {
-            PropertyType::firstOrCreate(['type_name' => $type['type_name']]);
+        foreach ($propertyTypes as $propertyType) {
+            PropertyType::firstOrCreate(['type_name' => $propertyType['type_name']]);
         }
     }
 }

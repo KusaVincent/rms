@@ -7,11 +7,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static where(string $string, $serviceKey)
+ * @method static create(array $serviceAvailability)
+ */
 final class ServiceAvailability extends Model
 {
     use HasFactory;
-
-    //    protected $fillable = ['service_key', 'is_active', 'service_name'];
 
     protected $casts = [
         'is_active' => 'boolean',

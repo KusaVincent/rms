@@ -7,11 +7,13 @@ namespace Database\Seeders;
 use App\Models\LeaseAgreement;
 use App\Models\Payment;
 use Illuminate\Database\Seeder;
+use Random\RandomException;
 
 final class LeaseAgreementSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * @throws RandomException
      */
     public function run(): void
     {

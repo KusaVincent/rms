@@ -8,22 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static create(array $array)
+ */
 final class PropertyAmenity extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    //    protected $fillable = ['property_id','amenity_id'];
-
-    /**
-     * Relationships.
-     */
-
-    // Property relationship
     public function property(): BelongsTo
     {
         return $this->belongsTo(Property::class);

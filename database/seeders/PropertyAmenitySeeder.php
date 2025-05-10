@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Amenity;
 use App\Models\Property;
 use App\Models\PropertyAmenity;
 use Illuminate\Database\Seeder;
@@ -16,8 +17,8 @@ final class PropertyAmenitySeeder extends Seeder
     public function run(): void
     {
         Property::all()->each(function ($property) {
-            \App\Models\Amenity::inRandomOrder()
-                ->take(fake()->numberBetween(1, 5)) // Randomly select 1-5 amenities
+            Amenity::inRandomOrder()
+                ->take(fake()->numberBetween(1, 5))
                 ->pluck('id')
                 ->each(function ($amenityId) use ($property) {
                     PropertyAmenity::create([

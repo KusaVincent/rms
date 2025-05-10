@@ -24,12 +24,12 @@ final class PropertyMediaFactory extends Factory
     {
         return [
             'video' => 'test-video.mp4',
-            'property_id' => Property::factory(),
             'image_one' => fake()->randomElement($this->images),
             'image_two' => fake()->randomElement($this->images),
             'image_three' => fake()->randomElement($this->images),
             'image_four' => fake()->randomElement($this->images),
             'image_five' => fake()->randomElement($this->images),
+            'property_id' => Property::inRandomOrder()->first()->id ?? Property::factory(),
         ];
     }
 }

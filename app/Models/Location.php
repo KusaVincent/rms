@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static select(string $string, string $string1)
+ * @method static inRandomOrder()
+ */
 final class Location extends Model
 {
     use HasFactory;
-
-    //    protected $fillable = ['address', 'town_city', 'area', 'map'];
 
     public function properties(): HasMany
     {

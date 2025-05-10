@@ -1,10 +1,9 @@
 <nav class="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow-md">
-    <!-- Logo -->
+
     <a href="{{ route('home') }}" class="flex items-center" wire:navigate>
         <img src="{{ asset('storage/logo/logo.png') }}" alt="Logo" class="w-16 h-16 object-contain">
     </a>
 
-    <!-- Navigation Links -->
     <div class="flex space-x-4">
         <x-navigation.nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
             Home
@@ -20,7 +19,6 @@
         </x-navigation.nav-link>
     </div>
 
-    <!-- Authentication Links -->
     <div class="flex space-x-4">
         @auth
             <x-navigation.nav-link href="{{ url('/dashboard') }}" :active="request()->is('dashboard')">

@@ -25,8 +25,8 @@ return new class extends Migration
                 ->cascadeOnDelete();
             $table->date('lease_start_date');
             $table->date('lease_end_date');
-            $table->decimal('rent_amount', 10, 2);
-            $table->decimal('deposit_amount', 10, 2);
+            $table->decimal('rent_amount', 10);
+            $table->decimal('deposit_amount', 10);
             $table->string('lease_term');
             $table->timestamps();
         });

@@ -21,23 +21,15 @@ use Laravel\Scout\Searchable;
  *
  * @method static findOrFail($id)
  * @method static where(string $string, $propertyType)
+ * @method static select(string[] $selects)
+ * @method static count()
+ * @method static inRandomOrder()
  */
 final class Property extends Model
 {
     use HasFactory, Searchable;
     //    use SoftDeletes;
     //    use CascadeSoftDeletes;
-
-    //    protected $fillable = [
-    //        'rent',
-    //        'deposit',
-    //        'location_id',
-    //        'description',
-    //        'available',
-    //        'name',
-    //        'property_image',
-    //        'property_type_id',
-    //    ];
 
     public function scopeIsAvailable(Builder $query): void
     {

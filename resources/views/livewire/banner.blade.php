@@ -1,4 +1,6 @@
 @php
+    use Illuminate\Support\Facades\Route;
+
     $bannerHeight = '';
     $backgroundImage = '';
 
@@ -20,45 +22,46 @@
             <p class="text-sm sm:text-base md:text-lg lg:text-xl mb-6">
                 {{ __('Search through our extensive catalog and find the perfect house for you.') }}
             </p>
-            <a href="{{ route('properties') }}" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm sm:text-base" wire:navigate>
+            <a href="{{ route('properties') }}"
+               class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm sm:text-base" wire:navigate>
                 {{ __('Get Started Now') }}
             </a>
 
-            <livewire:search />
+            <livewire:search/>
         </x-layouts.header-section>
     @elseif(Route::currentRouteName() === 'properties')
         <x-layouts.header-section title="Properties to Suit Your Needs"
-            :breadcrumbs="[
+                                  :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'Properties']
             ]"
         >
-            <livewire:search />
+            <livewire:search/>
         </x-layouts.header-section>
-        @elseif(Route::currentRouteName() === 'details')
+    @elseif(Route::currentRouteName() === 'details')
         <x-layouts.header-section title="Discover Your Next Home"
-            :breadcrumbs="[
+                                  :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'Property Details']
             ]"
         />
     @elseif(Route::currentRouteName() === 'contact')
         <x-layouts.header-section title="Contact Us"
-            :breadcrumbs="[
+                                  :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'Contact Us']
             ]"
         />
     @elseif(Route::currentRouteName() === 'about')
         <x-layouts.header-section title="About Us"
-            :breadcrumbs="[
+                                  :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'About Us']
             ]"
         />
     @else
         <x-layouts.header-section title="Discover More"
-            :breadcrumbs="[
+                                  :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')]
             ]"
         />

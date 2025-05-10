@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Models\Property;
 use App\Traits\ChecksServiceAvailability;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 final class Start extends Component
@@ -26,7 +27,12 @@ final class Start extends Component
             return view('livewire.empty');
         }
 
-        $saleStart = $agentStart = $listingStart = Property::count();
+        $saleStart = Cache::remember('sale_start_count', now()->addMinutes(60 * 24), function () {
+            return Property::count();
+        });
+
+        $agentStart = $saleStart;
+        $listingStart = $saleStart;
 
         return view('livewire.start', [
             'sale' => $saleStart,

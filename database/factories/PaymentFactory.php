@@ -21,10 +21,10 @@ final class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'lease_agreement_id' => LeaseAgreement::factory(),
-            'payment_date' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'payment_date' => $this->faker->dateTimeBetween('-1 year'),
             'payment_amount' => $this->faker->numberBetween(500, 5000),
-            'payment_method' => $this->faker->randomElement(['Cash', 'Card', 'Bank Transfer']),
+            'payment_method' => $this->faker->randomElement(['Cash', 'Card', 'Bank Transfer', 'M-Pesa']),
+            'lease_agreement_id' => LeaseAgreement::inRandomOrder()->first()->id ?? LeaseAgreement::factory(),
         ];
     }
 }

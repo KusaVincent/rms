@@ -18,10 +18,6 @@ final class PropertyService
 
     public function findPropertyById(string $propertyId): Property
     {
-        // preg_match('/\/property-details\/(\d+)/', $url, $matches);
-
-        // $propertyId = $matches[1] ?? null;
-
         return $propertyId !== '0'
             ? Property::isAvailable()->with(['location', 'amenities', 'propertyType'])->findOrFail($propertyId)
             : new Property;
@@ -36,7 +32,7 @@ final class PropertyService
             return Property::select($this->selects())
                 ->isAvailable()
                 ->with($this->relations())
-                ->orderBy('created_at', 'desc')
+                ->inRandomOrder()
                 ->take($this->limit())
                 ->get();
         }

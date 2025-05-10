@@ -7,9 +7,12 @@ namespace App\Livewire;
 use App\Models\Property;
 use App\Traits\Limitable;
 use App\Traits\Selectable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\Features\SupportRedirects\Redirector;
 
 final class Search extends Component
 {
@@ -24,15 +27,18 @@ final class Search extends Component
     {
         $this->results = new Collection();
 
-        if ($this->search !== '' && $this->search !== '0') {
-            $this->results = Property::select($this->selects())
-                ->isAvailable()
-                ->whereIn('id', Property::search($this->search)->get()->pluck('id'))
-                ->with($this->relations())
-                ->take($this->limit())
-                ->get();
+        if ($this->search === '') {
+            $this->redirectRoute('properties', navigate: true);
         }
 
+        $this->results = Property::select($this->selects())
+            ->isAvailable()
+            ->whereIn('id', Property::search($this->search)->get()->pluck('id'))
+            ->with($this->relations())
+            ->take($this->limit())
+            ->get();
+
         $this->dispatch('search-results', $this->results);
+
     }
 }

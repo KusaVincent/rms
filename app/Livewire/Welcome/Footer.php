@@ -6,18 +6,15 @@ namespace App\Livewire\Welcome;
 
 use App\Models\Contact;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Livewire\Component;
 
 final class Footer extends Component
 {
-    public string $margin;
+    public string $margin = '';
 
     public function mount(): void
     {
-        $this->margin = '';
-
         if (Route::currentRouteName() === 'home' || Route::currentRouteName() === 'properties') {
             $this->margin = 'mt-10';
         }

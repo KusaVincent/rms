@@ -22,8 +22,8 @@ final class PropertyAmenityFactory extends Factory
     public function definition(): array
     {
         return [
-            'property_id' => Property::factory(), // Replace with existing IDs if necessary
-            'amenity_id' => Amenity::factory(),  // Replace with existing IDs if necessary
+            'amenity_id' => Amenity::inRandomOrder()->first()->id ?? Amenity::factory(),
+            'property_id' => Property::inRandomOrder()->first()->id ?? Property::factory(),
         ];
     }
 }

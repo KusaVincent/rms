@@ -21,7 +21,7 @@ final class CustomerSupportAcknowledgement extends Notification implements Shoul
         /**
          * The support request instance.
          */
-        private CustomerSupport $support
+        private readonly CustomerSupport $support
     ) {}
 
     /**

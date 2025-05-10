@@ -18,7 +18,6 @@ final class DatabaseSeeder extends Seeder
             FounderSeeder::class,
             ContactSeeder::class,
             AmenitySeeder::class,
-
         ]);
 
         if (! app()->isProduction()) {

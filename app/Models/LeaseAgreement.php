@@ -9,19 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static inRandomOrder()
+ */
 final class LeaseAgreement extends Model
 {
     use HasFactory;
-
-    //    protected $fillable = [
-    //        'tenant_id',
-    //        'property_id',
-    //        'lease_start_date',
-    //        'lease_end_date',
-    //        'rent_amount',
-    //        'deposit_amount',
-    //        'lease_term',
-    //    ];
 
     public function tenant(): BelongsTo
     {

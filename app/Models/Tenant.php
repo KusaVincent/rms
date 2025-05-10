@@ -13,12 +13,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @template TFactory of Factory
  *
  * @mixin Model
+ * @method static inRandomOrder()
  */
 final class Tenant extends Model
 {
     use HasFactory;
-
-    //    protected $fillable = ['first_name', 'last_name', 'middle_name', 'email', 'phone', 'password'];
 
     /**
      * @return HasMany<LeaseAgreement, Tenant>

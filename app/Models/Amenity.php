@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * @method static inRandomOrder()
+ * @method static create(string[] $amenity)
+ */
 final class Amenity extends Model
 {
     use HasFactory;
-
-    //    protected $fillable = ['amenity_name', 'amenity_description'];
 
     public function properties(): BelongsToMany
     {

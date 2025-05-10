@@ -7,6 +7,7 @@ namespace App\Livewire\Forms;
 use App\Models\CustomerSupport;
 use App\Notifications\CustomerSupportAcknowledgement;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
@@ -27,6 +28,9 @@ final class ContactForm extends Form
     #[Validate('required|string|min:10|max:12')]
     public string $phone_number;
 
+    /**
+     * @throws ValidationException
+     */
     public function store(): void
     {
         $this->validate();

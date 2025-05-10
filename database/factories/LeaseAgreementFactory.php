@@ -22,13 +22,13 @@ final class LeaseAgreementFactory extends Factory
     public function definition(): array
     {
         return [
-            'tenant_id' => Tenant::factory(),
-            'property_id' => Property::factory(),
-            'lease_start_date' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'lease_end_date' => $this->faker->dateTimeBetween('now', '+1 year'),
             'rent_amount' => $this->faker->numberBetween(1000, 5000),
-            'deposit_amount' => $this->faker->numberBetween(500, 2000),
             'lease_term' => $this->faker->randomElement(['Monthly', 'Yearly']),
+            'deposit_amount' => $this->faker->numberBetween(500, 2000),
+            'lease_start_date' => $this->faker->dateTimeBetween('-1 year'),
+            'tenant_id' => Tenant::inRandomOrder()->first()->id ?? Tenant::factory(),
+            'property_id' => Property::inRandomOrder()->first()->id ?? Property::factory(),
+            'lease_end_date' => $this->faker->dateTimeBetween('now', '+1 year'),
         ];
     }
 }

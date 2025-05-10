@@ -25,10 +25,6 @@ final class Property extends Component
 
     private $filterResults;
 
-    private PropertyService $propertyService;
-
-    private ResolvePropertyClassAction $resolveClassAction;
-
     /**
      * @returns LengthAwarePaginator<int, ModelsProperty>
      * */
@@ -36,17 +32,17 @@ final class Property extends Component
 
     public function mount(PropertyService $propertyService, ResolvePropertyClassAction $resolveClassAction): void
     {
-        $this->propertyService = $propertyService;
-        $this->resolveClassAction = $resolveClassAction;
+        $propertyService1 = $propertyService;
+        $resolveClassAction1 = $resolveClassAction;
 
         if (Route::currentRouteName() === 'details') {
             $id = Request::route('id');
-            $this->property = $this->propertyService->findPropertyById($id);
+            $this->property = $propertyService1->findPropertyById($id);
         }
 
-        $this->class = $this->resolveClassAction->execute(Route::currentRouteName());
+        $this->class = $resolveClassAction1->execute(Route::currentRouteName());
 
-        $this->properties = $this->propertyService->resolveProperties(Route::currentRouteName(), $this->property);
+        $this->properties = $propertyService1->resolveProperties(Route::currentRouteName(), $this->property);
     }
 
     #[On('search-results')]

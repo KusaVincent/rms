@@ -22,12 +22,12 @@ final class MaintenanceFactory extends Factory
     public function definition(): array
     {
         return [
-            'property_id' => Property::factory(),
-            'tenant_id' => Tenant::factory(),
             'description' => $this->faker->sentence(),
+            'request_date' => $this->faker->dateTimeBetween('-1 year'),
+            'tenant_id' => Tenant::inRandomOrder()->first()->id ?? Tenant::factory(),
+            'property_id' => Property::inRandomOrder()->first()->id ?? Property::factory(),
             'status' => $this->faker->randomElement(['Pending', 'In Progress', 'Completed']),
-            'request_date' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'completion_date' => $this->faker->boolean(50) ? $this->faker->dateTimeBetween('now', '+1 month') : null,
+            'completion_date' => $this->faker->boolean() ? $this->faker->dateTimeBetween('now', '+1 month') : null,
         ];
     }
 }
