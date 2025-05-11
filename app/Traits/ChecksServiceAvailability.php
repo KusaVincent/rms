@@ -6,6 +6,7 @@ namespace App\Traits;
 
 use App\Models\ServiceAvailability;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 trait ChecksServiceAvailability
 {
@@ -13,10 +14,18 @@ trait ChecksServiceAvailability
 
     public function checkServiceAvailability(string $serviceKey): void
     {
-        $service = Cache::remember($serviceKey.'_service_availability', now()->addMinutes(5), fn () => ServiceAvailability::where('service_key', $serviceKey)->first());
+        try {
+            $service = Cache::remember(
+                $serviceKey . '_service_availability',
+                now()->addMinutes(5),
+                fn () => ServiceAvailability::where('service_key', $serviceKey)->first()
+            );
 
-        if (! $service || ! $service->is_active) {
-            $this->serviceUnavailable = true;
+            if (! $service || ! $service->is_active) {
+                $this->serviceUnavailable = true;
+            }
+        } catch (\Throwable $e) {
+            Log::error('Error in checkServiceAvailability: ' . $e->getMessage());
         }
     }
 }

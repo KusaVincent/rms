@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Casts\PaymentCast;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,10 @@ use Laravel\Scout\Searchable;
  *
  * @property int $id
  * @property int $property_type_id
+ * @property mixed $propertyType
+ * @property mixed $location
+ * @property mixed $created_at
+ * @property mixed $rent
  *
  * @method static findOrFail($id)
  * @method static where(string $string, $propertyType)
@@ -30,6 +35,10 @@ final class Property extends Model
     use HasFactory, Searchable;
     //    use SoftDeletes;
     //    use CascadeSoftDeletes;
+
+    protected $casts = [
+        'rent' => PaymentCast::class,
+    ];
 
     public function scopeIsAvailable(Builder $query): void
     {

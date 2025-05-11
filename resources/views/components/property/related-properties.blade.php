@@ -15,7 +15,10 @@
                                 {{ __('Posted') }}: {{ $property->created_at->diffForHumans() }}
                             </p>
                             <p class="text-sm text-gray-600">{{ __('Rental Type') }}: {{ $property->propertyType->type_name ?? 'N/A' }}</p>
-                            <p class="text-sm text-gray-600">{{ __('Rent') }}: Ksh {{ number_format($property->rent, 2) }}</p>
+                            <p class="text-sm text-gray-600">{{ __('Rent') }}:
+                                {{ $property->rent }}
+                                <x-negotiable :negotiable="$property->negotiable" />
+                            </p>
                             <p class="text-sm text-gray-600">{{ __('Location') }}: {{ $property->location->town_city ?? 'N/A' }}</p>
                         </div>
                     </div>

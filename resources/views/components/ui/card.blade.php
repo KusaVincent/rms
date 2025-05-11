@@ -1,4 +1,4 @@
-@props(['link', 'image', 'title', 'propertyType', 'rent' => 1, 'location'])
+@props(['link', 'image', 'title', 'propertyType', 'rent' => 1, 'location', 'negotiable' => false])
 
 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 flex flex-col">
     <a href="{{ $link }}" wire:navigate>
@@ -10,7 +10,11 @@
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $title }}</h5>
         </a>
         <p class="text-sm text-gray-600 "><span class="font-bold">{{ __('Rental Type') }}</span>: {{ $propertyType ?? 'N/A' }}</p>
-        <p class="text-sm text-gray-600"><span class="font-bold">{{ __('Rent') }}</span> : Ksh {{ number_format($rent, 2) }}</p>
+        <p class="text-sm text-gray-600">
+            <span class="font-bold">{{ __('Rent') }}</span>
+            : {{ $rent }}
+            <x-negotiable :negotiable="$negotiable" />
+        </p>
         <p class="text-sm text-gray-600"><span class="font-bold">{{ __('Location') }}</span>: {{ $location ?? 'N/A' }}</p>
     </div>
 

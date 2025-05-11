@@ -24,6 +24,7 @@ final class PropertyFactory extends Factory
         return [
             'property_image' => 'prop.jpg',
             'available' => $this->faker->boolean(),
+            'negotiable' => $this->faker->boolean(),
             'description' => $this->faker->paragraph(),
             'name' => $this->faker->words(3, true),
             'rent' => $this->faker->numberBetween(15000, 500000),

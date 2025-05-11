@@ -8,6 +8,7 @@
             <x-ui.card
                 :rent="$result['rent']"
                 :title="$result['name']"
+                :negotiable="$result['negotiable']"
                 :link="route('details', ['id' => $result['id']])"
                 :propertyType="$result['property_type']['type_name'] ?? ''"
                 :location="$result['location']['town_city'] . ', ' . ($result['location']['area'] ?? '')"

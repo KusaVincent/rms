@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('rent');
             $table->integer('deposit');
             $table->boolean('available')->default(true);
+            $table->boolean('negotiable')->default(false);
             $table->timestamps();
         });
     }

@@ -10,6 +10,7 @@
             <x-ui.card
                 :rent="$property->rent"
                 :title="$property->name"
+                :negotiable="$property->negotiable"
                 :link="route('details', ['id' => $property->id])"
                 :propertyType="$property->propertyType->type_name"
                 :location="$property->location->town_city . ', ' . $property->location->area"

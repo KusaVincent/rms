@@ -14,6 +14,7 @@
             <x-ui.property-media :media="$property"/>
             <x-property.property-details
                 rent="{{ $property->rent }}"
+                :negotiable="$property->negotiable"
                 description="{{ $property->description }}"
                 size="{{ $property->propertyType->type_name }}"
                 location="{{ $property->location->address }}, {{ $property->location->town_city }},  {{ $property->location->area }}."
