@@ -33,8 +33,6 @@ use Laravel\Scout\Searchable;
 final class Property extends Model
 {
     use HasFactory, Searchable;
-    //    use SoftDeletes;
-    //    use CascadeSoftDeletes;
 
     protected $casts = [
         'rent' => PaymentCast::class,

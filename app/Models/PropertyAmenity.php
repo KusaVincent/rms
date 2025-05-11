@@ -20,7 +20,6 @@ final class PropertyAmenity extends Model
         return $this->belongsTo(Property::class);
     }
 
-    // Amenity relationship
     public function amenity(): BelongsTo
     {
         return $this->belongsTo(Amenity::class);

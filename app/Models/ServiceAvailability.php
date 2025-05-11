@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 final class ServiceAvailability extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $casts = [
         'is_active' => 'boolean',
