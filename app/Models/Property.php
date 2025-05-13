@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Casts\PaymentCast;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +39,8 @@ final class Property extends Model
         'rent' => PaymentCast::class,
     ];
 
-    public function scopeIsAvailable(Builder $query): void
+    #[Scope]
+    protected function isAvailable(Builder $query): void
     {
         $query->where('available', true);
     }
