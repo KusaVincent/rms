@@ -52,7 +52,7 @@ final class Property extends Component
                 $id = (int) $id;
                 $this->property = $propertyService1->findPropertyById($id);
 
-                if (!$this->property instanceof ModelsProperty) {
+                if (! $this->property instanceof ModelsProperty) {
                     Log::warning("Property not found for ID: {$id}");
                     $this->redirectRoute($routeName, navigate: true);
                 }

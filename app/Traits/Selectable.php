@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 trait Selectable
@@ -27,8 +28,9 @@ trait Selectable
             }
 
             return $selects;
-        } catch (\Exception $e) {
-            Log::error('Error in selects method: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error in selects method: '.$e->getMessage());
+
             return ['*'];
         }
     }
@@ -57,8 +59,9 @@ trait Selectable
             }
 
             return $relations;
-        } catch (\Exception $e) {
-            Log::error('Error in selects method: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error in selects method: '.$e->getMessage());
+
             return [];
         }
     }

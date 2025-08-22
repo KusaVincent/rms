@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentCast implements CastsAttributes
+final class PaymentCast implements CastsAttributes
 {
     /**
      * Cast the given value.
@@ -14,7 +16,7 @@ class PaymentCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): string
     {
-        return 'Ksh ' . number_format($value, 2);
+        return 'Ksh '.number_format($value, 2);
     }
 
     /**
