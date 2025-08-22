@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Actions\PropertyFilterAction;
 use App\Models\Location;
-use App\Models\Property;
 use App\Models\PropertyType;
 use App\Traits\Limitable;
 use App\Traits\Selectable;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 final class SideBar extends Component
 {
     use Limitable, Selectable;
+
+    public $negotiable = '';
 
     public $locations = [];
 
@@ -42,35 +45,47 @@ final class SideBar extends Component
         }
     }
 
-    public function updateSelectedLocations(): void
+    public function updatedNegotiable(): void
     {
         $this->applyFilters();
     }
 
-    public function updateSelectedTypes(): void
+    public function updatedSelectedLocations(): void
+    {
+        $this->applyFilters();
+    }
+
+    public function updatedSelectedTypes(): void
     {
         $this->applyFilters();
     }
 
     public function applyFilters(): void
     {
+        Cache::forget('filter_types_'.session()->getId());
+        Cache::forget('filter_locations_'.session()->getId());
+        Cache::forget('filter_negotiable_'.session()->getId());
+
+        $criteria = [
+            'limit' => $this->limit(),
+            'selects' => $this->selects(),
+            'relations' => $this->relations(),
+        ];
+
         try {
-            $query = Property::query();
-            $query->select($this->selects())
-                ->isAvailable();
+            if ($this->negotiable === 'Yes') {
+                Cache::set('filter_negotiable_'.session()->getId(), $this->negotiable, now()->addMinutes(5));
+            }
 
             if ($this->selectedLocations !== []) {
-                $query->whereIn('location_id', $this->selectedLocations);
+                Cache::set('filter_locations_'.session()->getId(), $this->selectedLocations, now()->addMinutes(5));
             }
 
             if ($this->selectedTypes !== []) {
-                $query->whereIn('property_type_id', $this->selectedTypes);
+                Cache::set('filter_types_'.session()->getId(), $this->selectedTypes, now()->addMinutes(5));
             }
 
-            $this->results = $query->with($this->relations())
-                ->latest()
-                ->take($this->limit())
-                ->get();
+            $this->results = PropertyFilterAction::execute($criteria);
 
             $this->dispatch('filter-results', $this->results);
         } catch (Exception $e) {

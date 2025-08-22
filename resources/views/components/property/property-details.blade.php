@@ -6,7 +6,6 @@
     <ul class="mt-4 space-y-2">
         <li><strong>{{ __('Rent') }}:</strong>
             {{ $rent }}
-            <x-negotiable :negotiable="$negotiable" />
         </li>
         <li><strong>{{ __('Rental Type') }}:</strong> {{ $size }}</li>
         <li><strong>{{ __('Location') }}:</strong> {{ $location }}</li>

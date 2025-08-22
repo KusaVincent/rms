@@ -8,9 +8,8 @@
                         class="mr-2"
                         type="checkbox"
                         value="{{ $item->id }}"
-                        wire:change="{{ $idPrefix }}"
                         id="{{ $idPrefix . $item->id }}"
-                        wire:model.debounce.300ms="{{ $idPrefix === 'updateSelectedLocations' ? 'selectedLocations' : 'selectedTypes' }}"
+                        wire:model.live="{{ $idPrefix === 'updateSelectedLocations' ? 'selectedLocations' : 'selectedTypes' }}"
                     />
                     <label for="{{ $idPrefix . $item->id }}">
                         @if($idPrefix == 'updateSelectedLocations')

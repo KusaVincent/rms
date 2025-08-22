@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('property_amenities', function (Blueprint $table) {
+        Schema::create('amenity_property', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Property::class)
                 ->constrained()
@@ -23,15 +23,11 @@ return new class extends Migration
             $table->foreignIdFor(Amenity::class)
                 ->constrained()
                 ->cascadeOnDelete();
+            $table->foreignId('created_by')
+                ->nullable()
+                ->constrained('users')
+                ->cascadeOnDelete();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('property_amenities');
     }
 };

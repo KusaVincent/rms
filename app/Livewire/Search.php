@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Models\Property;
+use App\Actions\PropertyFilterAction;
 use App\Traits\Limitable;
 use App\Traits\Selectable;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -25,7 +26,16 @@ final class Search extends Component
 
     public function updatedSearch(): void
     {
+
+        Cache::forget('search_'.session()->getId());
+
         $this->results = new Collection();
+
+        $criteria = [
+            'limit' => $this->limit(),
+            'selects' => $this->selects(),
+            'relations' => $this->relations(),
+        ];
 
         if ($this->search === '') {
             $this->redirectRoute('properties', navigate: true);
@@ -34,12 +44,9 @@ final class Search extends Component
         }
 
         try {
-            $this->results = Property::select($this->selects())
-                ->isAvailable()
-                ->whereIn('id', Property::search($this->search)->get()->pluck('id'))
-                ->with($this->relations())
-                ->take($this->limit())
-                ->get();
+            Cache::set('search_'.session()->getId(), $this->search, now()->addMinutes(5));
+
+            $this->results = PropertyFilterAction::execute($criteria);
 
             $this->dispatch('search-results', $this->results);
         } catch (Exception $e) {

@@ -1,4 +1,6 @@
 <aside class="col-span-12 lg:col-span-2">
+    <x-filter-select />
+
     <x-filter-list
         title="Select Rental Type"
         :items="$propertyTypes"

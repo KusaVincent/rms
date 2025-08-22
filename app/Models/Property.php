@@ -39,12 +39,6 @@ final class Property extends Model
         'rent' => PaymentCast::class,
     ];
 
-    #[Scope]
-    protected function isAvailable(Builder $query): void
-    {
-        $query->where('available', true);
-    }
-
     /**
      * Get the name of the index associated with the model.
      */
@@ -91,7 +85,10 @@ final class Property extends Model
      */
     public function amenities(): BelongsToMany
     {
-        return $this->belongsToMany(Amenity::class, 'property_amenities');
+        return $this->belongsToMany(Amenity::class)
+            ->using(AmenityProperty::class)
+            ->withPivot(['created_by'])
+            ->withTimestamps();
     }
 
     public function leaseAgreements(): HasMany
@@ -107,5 +104,10 @@ final class Property extends Model
     public function propertyMedia(): HasOne
     {
         return $this->hasOne(PropertyMedia::class);
+    }
+
+    #[Scope]private function isAvailable(Builder $query): void
+    {
+        $query->where('available', true);
     }
 }
