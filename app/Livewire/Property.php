@@ -43,17 +43,12 @@ final class Property extends Component
             $resolveClassAction1 = $resolveClassAction;
 
             if ($routeName === 'details') {
-                $id = Request::route('id');
+                $slug = Request::route('slug');
 
-                if (! is_numeric($id) || (int) $id <= 0) {
-                    throw new InvalidArgumentException("Invalid property ID provided: {$id}");
-                }
-
-                $id = (int) $id;
-                $this->property = $propertyService1->findPropertyById($id);
+                $this->property = $propertyService1->findPropertyById($slug);
 
                 if (! $this->property instanceof ModelsProperty) {
-                    Log::warning("Property not found for ID: {$id}");
+                    Log::warning("Property not found for ID: {$slug}");
                     $this->redirectRoute($routeName, navigate: true);
                 }
             }

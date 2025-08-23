@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Casts\PaymentCast;
-use Illuminate\Database\Eloquent\Attributes\Scope;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,8 @@ use Laravel\Scout\Searchable;
  * @property mixed $rent
  *
  * @method static findOrFail($id)
+ * @method static findBySlug(string $slug, array $columns = ['*'])($id)
+ * @method static findBySlugOrFail(string $slug, array $columns = ['*'])($id)
  * @method static where(string $string, $propertyType)
  * @method static select(string[] $selects)
  * @method static count()
@@ -33,12 +36,20 @@ use Laravel\Scout\Searchable;
  */
 final class Property extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory, Searchable, Sluggable, SluggableScopeHelpers;
 
     protected $casts = [
         'rent' => PaymentCast::class,
     ];
 
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => ['slug_name']
+            ]
+        ];
+    }
     /**
      * Get the name of the index associated with the model.
      */
@@ -109,5 +120,10 @@ final class Property extends Model
     public function scopeIsAvailable(Builder $query): void
     {
         $query->where('available', true);
+    }
+
+    public function getSlugNameAttribute(): string
+    {
+        return $this->propertyType->type_name . ' ' . $this->name . ' ' . $this->location->area;
     }
 }

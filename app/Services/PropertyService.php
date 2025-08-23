@@ -18,15 +18,12 @@ final class PropertyService
 {
     use Limitable, Paginatable, Selectable;
 
-    public function findPropertyById(int $propertyId): ?Property
+    public function findPropertyById(string $propertySlug): ?Property
     {
-        if ($propertyId <= 0) {
-            return null;
-        }
-
         return Property::isAvailable()
             ->with(['location', 'amenities', 'propertyType'])
-            ->findOrFail($propertyId);
+            ->whereSlug($propertySlug)
+            ->firstOrFail();
     }
 
     /**

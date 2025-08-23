@@ -11,7 +11,7 @@
             <livewire:property />
         </x-layouts.grid>
     @elseif(Route::currentRouteName() === 'details')
-        <livewire:detail :id="Request::route('id')" />
+        <livewire:detail :slug="Request::route('slug')" />
     @elseif(Route::currentRouteName() === 'contact')
         <livewire:contact />
     @elseif(Route::currentRouteName() === 'about')

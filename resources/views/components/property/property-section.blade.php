@@ -9,7 +9,7 @@
                 :rent="$property->rent"
                 :title="$property->name"
                 :negotiable="$property->negotiable"
-                :link="route('details', ['id' => $property->id])"
+                :link="route('details', ['slug' => $property->slug])"
                 :propertyType="$property->propertyType->type_name"
                 :location="$property->location->town_city . ', ' . $property->location->area"
                 :image="asset($property->property_image ? 'storage/property/' . $property->property_image : 'default/image.png')"

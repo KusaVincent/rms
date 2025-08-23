@@ -10,7 +10,7 @@ Route::middleware('guest')->group(function (): void {
     Route::view('/about', 'tenant-entry')->name('about');
     Route::view('/contact', 'tenant-entry')->name('contact');
     Route::view('/properties', 'tenant-entry')->name('properties');
-    Route::get('/property-details/{id}', Detail::class)->name('details');
+    Route::get('/property-details/{slug}', Detail::class)->name('details');
 });
 
 Route::middleware(['auth'])->group(function (): void {
