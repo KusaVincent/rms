@@ -13,7 +13,7 @@ Route::middleware('guest')->group(function (): void {
     Route::get('/property-details/{slug}', Detail::class)->name('details');
 });
 
-Route::middleware(['auth'])->group(function (): void {
+Route::middleware('auth')->group(function (): void {
     Route::view('/profile', 'profile')->name('profile');
     Route::view('/dashboard', 'dashboard')->middleware('verified')->name('dashboard');
 });
