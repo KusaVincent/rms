@@ -1,5 +1,23 @@
-<x-ui.statistics-section>
-    <x-ui.stat-box icon="flaticon-badge" count="{{ number_format($sale) }}" label="Lines of Sale" />
-    <x-ui.stat-box icon="flaticon-tag" count="{{ number_format($listings) }}" label="Listings For Rent" />
-    <x-ui.stat-box icon="flaticon-call-center-agent" count="{{ number_format($agents) }}" label="Agents" />
-</x-ui.statistics-section>
+<div>
+    @php
+        $saleStarts     = (int) $sales;
+        $agentsStarts   = (int) $agents;
+        $listingsStarts = (int) $listings;
+    @endphp
+
+    @if($saleStarts > 0 || $listingsStarts > 0 || $agentsStarts > 0)
+        <x-ui.statistics-section>
+            @if($saleStarts > 0)
+                <x-ui.stat-box icon="flaticon-badge" count="{{ number_format($saleStarts) }}" label="Lines of Sale" />
+            @endif
+
+            @if($listingsStarts > 0)
+                <x-ui.stat-box icon="flaticon-tag" count="{{ number_format($listingsStarts) }}" label="Listings For Rent" />
+            @endif
+
+            @if($agentsStarts > 0)
+                <x-ui.stat-box icon="flaticon-call-center-agent" count="{{ number_format($agentsStarts) }}" label="Agents" />
+            @endif
+        </x-ui.statistics-section>
+    @endif
+</div>

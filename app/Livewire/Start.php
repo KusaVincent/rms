@@ -35,16 +35,25 @@ final class Start extends Component
                 now()->addDay(),
                 fn () => Property::count()
             );
+            $agentStart = Cache::remember(
+                'agent_start_count',
+                now()->addDay(),
+                fn () => Property::count()
+            );
+            $listingStart = Cache::remember(
+                'listing_start_count',
+                now()->addDay(),
+                fn () => Property::count()
+            );
         } catch (Exception $e) {
             Log::error('Error fetching property count: '.$e->getMessage());
             $saleStart = 0;
+            $agentStart = 0;
+            $listingStart = 0;
         }
 
-        $agentStart = $saleStart;
-        $listingStart = $saleStart;
-
         return view('livewire.start', [
-            'sale' => $saleStart,
+            'sales' => $saleStart,
             'agents' => $agentStart,
             'listings' => $listingStart,
         ]);
