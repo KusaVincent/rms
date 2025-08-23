@@ -106,7 +106,7 @@ final class Property extends Model
         return $this->hasOne(PropertyMedia::class);
     }
 
-    #[Scope]private function isAvailable(Builder $query): void
+    public function scopeIsAvailable(Builder $query): void
     {
         $query->where('available', true);
     }
