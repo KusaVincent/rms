@@ -26,9 +26,6 @@ use Laravel\Scout\Searchable;
  * @property mixed $created_at
  * @property mixed $rent
  *
- * @method static findOrFail($id)
- * @method static findBySlug(string $slug, array $columns = ['*'])($id)
- * @method static findBySlugOrFail(string $slug, array $columns = ['*'])($id)
  * @method static where(string $string, $propertyType)
  * @method static select(string[] $selects)
  * @method static count()

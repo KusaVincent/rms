@@ -20,8 +20,9 @@ final class PropertyService
 
     public function findPropertyById(string $propertySlug): ?Property
     {
-        return Property::isAvailable()
-            ->with(['location', 'amenities', 'propertyType'])
+        return Property::select($this->selects())
+            ->isAvailable()
+            ->with($this->relations(true))
             ->whereSlug($propertySlug)
             ->firstOrFail();
     }
