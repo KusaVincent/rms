@@ -43,10 +43,11 @@ final class Property extends Model
     {
         return [
             'slug' => [
-                'source' => ['slug_name']
-            ]
+                'source' => ['slug_name'],
+            ],
         ];
     }
+
     /**
      * Get the name of the index associated with the model.
      */
@@ -121,6 +122,6 @@ final class Property extends Model
 
     public function getSlugNameAttribute(): string
     {
-        return $this->propertyType->type_name . ' ' . $this->name . ' ' . $this->location->area;
+        return $this->propertyType->type_name.' '.$this->name.' '.$this->location->area;
     }
 }

@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Property;
 use App\Traits\Limitable;
 use App\Traits\Paginatable;
+use App\Traits\Relatable;
 use App\Traits\Selectable;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -16,15 +17,11 @@ use Illuminate\Support\Facades\Log;
 
 final class PropertyService
 {
-    use Limitable, Paginatable, Selectable;
+    use Limitable, Paginatable, Selectable, Relatable;
 
     public function findPropertyById(string $propertySlug): ?Property
     {
-        return Property::select($this->selects())
-            ->isAvailable()
-            ->with($this->relations(true))
-            ->whereSlug($propertySlug)
-            ->firstOrFail();
+        return $this->relatedProperties($propertySlug, true);
     }
 
     /**

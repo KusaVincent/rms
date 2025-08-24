@@ -19,7 +19,7 @@ final class Contact extends Component
     {
         $this->form->store();
 
-        //        ToastMagic::success('Your message has been sent successfully!');
+        ToastMagic::success('Your message has been sent successfully!');
 
         return redirect()->back()->with('message', 'Your message has been sent successfully!');
     }

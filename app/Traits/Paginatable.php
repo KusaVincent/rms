@@ -6,8 +6,10 @@ namespace App\Traits;
 
 trait Paginatable
 {
+    use Limitable;
+
     public function getPerPage(): int
     {
-        return (int) (config('app.paginate') ?? 30);
+        return (int) (config('app.paginate') ?? self::DEFAULT_LIMIT);
     }
 }

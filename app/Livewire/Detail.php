@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Models\Property;
+use App\Traits\Relatable;
 use App\Traits\Selectable;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Contracts\View\View;
@@ -14,7 +15,7 @@ use Livewire\Component;
 
 final class Detail extends Component
 {
-    use Selectable;
+    use Selectable, Relatable;
 
     public Property $property;
 
@@ -23,12 +24,9 @@ final class Detail extends Component
         $this->isCalledFromDetail = true;
 
         try {
-            $this->property = Property::select($this->selects())
-                ->isAvailable()
-                ->with($this->relations())
-                ->whereSlug($slug)
-                ->firstOrFail();
+            $this->property = $this->relatedProperties($slug);
         } catch (ModelNotFoundException $e) {
+
             Log::error("Property with ID {$slug} not found: ".$e->getMessage());
             ToastMagic::info('Property not found. You can check more properties below');
             $this->redirectRoute('properties', navigate: true);

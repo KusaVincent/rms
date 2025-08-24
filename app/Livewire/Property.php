@@ -56,10 +56,12 @@ final class Property extends Component
             $this->class = $resolveClassAction1->execute($routeName);
             $this->properties = $propertyService1->resolveProperties($routeName, $this->property);
         } catch (InvalidArgumentException $e) {
+
             ToastMagic::error('Invalid property identifier provided.');
             Log::warning('Invalid argument encountered: '.$e->getMessage());
             $this->redirectRoute($routeName, navigate: true);
         } catch (Exception $e) {
+
             Log::error('An error occurred in mount: '.$e->getMessage());
             ToastMagic::error('Something went wrong. Please try again later.');
             $this->redirectRoute($routeName, navigate: true);

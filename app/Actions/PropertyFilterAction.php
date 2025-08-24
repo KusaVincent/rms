@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Models\Property;
+use App\Traits\Limitable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 final class PropertyFilterAction
 {
+    use Limitable;
+
     public static function execute(array $criteria): Collection
     {
         $search = Cache::get('search_'.session()->getId());
@@ -39,7 +42,7 @@ final class PropertyFilterAction
 
         return $query->with($criteria['relations'])
             ->latest()
-            ->take($criteria['limit'] ?? 10)
+            ->take($criteria['limit'] ?? self::DEFAULT_LIMIT)
             ->get();
     }
 }
