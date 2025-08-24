@@ -9,7 +9,7 @@
                         type="checkbox"
                         value="{{ $item->id }}"
                         id="{{ $idPrefix . $item->id }}"
-                        wire:model.live="{{ $idPrefix === 'updateSelectedLocations' ? 'selectedLocations' : 'selectedTypes' }}"
+                        wire:model.live.debounce.250ms="{{ $idPrefix === 'updateSelectedLocations' ? 'selectedLocations' : 'selectedTypes' }}"
                     />
                     <label for="{{ $idPrefix . $item->id }}">
                         @if($idPrefix == 'updateSelectedLocations')
