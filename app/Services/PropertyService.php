@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 
 final class PropertyService
 {
-    use Limitable, Paginatable, Selectable, Relatable;
+    use Limitable, Paginatable, Relatable, Selectable;
 
     public function findPropertyById(string $propertySlug): ?Property
     {

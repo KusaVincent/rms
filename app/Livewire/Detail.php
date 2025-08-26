@@ -15,11 +15,11 @@ use Livewire\Component;
 
 final class Detail extends Component
 {
-    use Selectable, Relatable;
+    use Relatable, Selectable;
 
     public Property $property;
 
-    public function mount($slug): void
+    public function mount(string $slug): void
     {
         $this->isCalledFromDetail = true;
 
