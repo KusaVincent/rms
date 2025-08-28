@@ -37,4 +37,10 @@ return [
         ],
     ],
 
+    'elk' => [
+        'username' => env('ELK_USERNAME', 'elastic'),
+        'password' => env('ELK_PASSWORD', 'changeme'),
+        'host_ip' => env('ELK_HOST_IP', '192.168.56.10:9200'),
+        'host' => env('ELK_HOST', 'http://192.168.56.10:9200'),
+    ],
 ];

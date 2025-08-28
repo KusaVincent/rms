@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Helpers\LogHelper;
 use App\Models\Founder as ModelsFounder;
 use App\Traits\ChecksServiceAvailability;
 use Exception;
@@ -32,13 +33,13 @@ final class Founder extends Component
         try {
             $founders = Cache::remember('founders', now()->addYear(), fn () => ModelsFounder::all());
         } catch (Exception $e) {
-            Log::error("Failed to fetch founders: {$e->getMessage()}");
+            LogHelper::error("Failed to fetch founders: {$e->getMessage()}");
 
             try {
                 $founders = ModelsFounder::all();
             } catch (Exception $dbException) {
                 $founders = collect();
-                Log::error("Failed to fetch founders from the database: {$dbException->getMessage()}");
+                LogHelper::error("Failed to fetch founders from the database: {$dbException->getMessage()}");
             }
         }
 

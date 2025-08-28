@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Actions\PropertyFilterAction;
+use App\Helpers\LogHelper;
 use App\Models\Location;
 use App\Models\PropertyType;
 use App\Traits\Limitable;
@@ -13,7 +14,6 @@ use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 final class SideBar extends Component
@@ -41,7 +41,7 @@ final class SideBar extends Component
             $this->locations = [];
             $this->propertyTypes = [];
             ToastMagic::error('Failed to load data. Please try again later.');
-            Log::error("Error fetching locations or property types: {$e->getMessage()}");
+            LogHelper::error("Error fetching locations or property types: {$e->getMessage()}");
         }
     }
 
@@ -87,10 +87,12 @@ final class SideBar extends Component
 
             $this->results = PropertyFilterAction::execute($criteria);
 
+            LogHelper::info('Filter Result For Successful');
+
             $this->dispatch('filter-results', $this->results);
         } catch (Exception $e) {
             $this->results = collect();
-            Log::error("Error applying filters: {$e->getMessage()}");
+            LogHelper::error("Error applying filters: {$e->getMessage()}");
             ToastMagic::error('Failed to apply filters. Please try again later.');
         }
     }

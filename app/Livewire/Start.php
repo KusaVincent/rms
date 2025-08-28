@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Helpers\LogHelper;
 use App\Models\Property;
 use App\Traits\ChecksServiceAvailability;
 use Exception;
@@ -46,7 +47,7 @@ final class Start extends Component
                 fn () => Property::count()
             );
         } catch (Exception $e) {
-            Log::error('Error fetching property count: '.$e->getMessage());
+            LogHelper::error('Error fetching property count: '.$e->getMessage());
             $saleStart = 0;
             $agentStart = 0;
             $listingStart = 0;

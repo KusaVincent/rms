@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Actions\ResolvePropertyClassAction;
+use App\Helpers\LogHelper;
 use App\Models\Property as ModelsProperty;
 use App\Services\PropertyService;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
@@ -48,7 +49,7 @@ final class Property extends Component
                 $this->property = $propertyService1->findPropertyById($slug);
 
                 if (! $this->property instanceof ModelsProperty) {
-                    Log::warning("Property not found for ID: {$slug}");
+                    LogHelper::warning("Property not found for ID: {$slug} ... {$routeName}");
                     $this->redirectRoute($routeName, navigate: true);
                 }
             }
@@ -58,11 +59,11 @@ final class Property extends Component
         } catch (InvalidArgumentException $e) {
 
             ToastMagic::error('Invalid property identifier provided.');
-            Log::warning('Invalid argument encountered: '.$e->getMessage());
+            LogHelper::warning('Invalid argument encountered: '.$e->getMessage());
             $this->redirectRoute($routeName, navigate: true);
         } catch (Exception $e) {
 
-            Log::error('An error occurred in mount: '.$e->getMessage());
+            LogHelper::error('An error occurred in mount: '.$e->getMessage());
             ToastMagic::error('Something went wrong. Please try again later.');
             $this->redirectRoute($routeName, navigate: true);
         }
@@ -72,12 +73,15 @@ final class Property extends Component
     public function setSearchResults($results): void
     {
         $this->searchResults = $results;
+        LogHelper::info('Searched Result');
     }
 
     #[On('filter-results')]
     public function setFilterResults($results): void
     {
         $this->filterResults = $results;
+
+        LogHelper::info('Filtered Result');
     }
 
     public function render(): View
