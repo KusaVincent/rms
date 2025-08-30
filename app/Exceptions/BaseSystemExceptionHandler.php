@@ -15,15 +15,15 @@ abstract class BaseSystemExceptionHandler
     public function __construct(protected ElasticSearchService $elasticsearchService) {}
 
     /**
-     * Log exception to Elasticsearch with comprehensive data
+     * Log exception to Elasticsearch with comprehensive data.
      */
     final public function logToElasticsearch(Throwable $e, Request $request, array $additionalData = []): void
     {
+        $errorData = $this->buildErrorDocument($e, $request, $additionalData);
+
         try {
-            $errorData = $this->buildErrorDocument($e, $request, $additionalData);
             $this->elasticsearchService->logError($errorData);
         } catch (Throwable $loggingError) {
-            // Fallback to standard logging if Elasticsearch fails
             Log::error('Failed to log error to Elasticsearch', [
                 'elasticsearch_error' => $loggingError->getMessage(),
                 'original_error' => $e->getMessage(),
@@ -34,12 +34,11 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Build comprehensive error document for Elasticsearch
+     * Build comprehensive error document for Elasticsearch.
      */
     private function buildErrorDocument(Throwable $e, Request $request, array $additionalData = []): array
     {
-        $startTime = defined('LARAVEL_START') ? LARAVEL_START : microtime(true);
-        $responseTime = (microtime(true) - $startTime) * 1000; // Convert to milliseconds
+        $responseTime = (microtime(true) - (defined('LARAVEL_START') ? LARAVEL_START : microtime(true))) * 1000; // ms
 
         return array_merge([
             'id' => $this->generateErrorId($e, $request),
@@ -66,7 +65,7 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Generate unique error ID for tracking
+     * Generate unique error ID for tracking.
      */
     private function generateErrorId(Throwable $e, Request $request): string
     {
@@ -81,7 +80,7 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Get exception type name
+     * Get exception type name.
      */
     private function getExceptionType(Throwable $e): string
     {
@@ -89,7 +88,7 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Get HTTP status code from exception
+     * Get HTTP status code from exception.
      */
     private function getStatusCode(Throwable $e): int
     {
@@ -97,37 +96,18 @@ abstract class BaseSystemExceptionHandler
             return $e->getStatusCode();
         }
 
-        if (method_exists($e, 'getCode') && $e->getCode() > 0) {
-            return $e->getCode();
-        }
-
-        return 500;
+        return $e->getCode() > 0 ? $e->getCode() : 500;
     }
 
     /**
-     * Retrieve user context from multiple authentication guards and customize it according to your application's requirements
+     * Retrieve user context from authentication guards.
      */
     private function getUserContext(Request $request): ?array
     {
         $guards = [
-            'web' => fn ($user) => [
-                'id' => (string) $user->id,
-                'type' => 'user',
-                'name' => $user->name ?? 'Unknown',
-                'email' => $user->email ?? null,
-            ],
-            'api' => fn ($user) => [
-                'id' => (string) $user->id,
-                'type' => 'api_user',
-                'name' => $user->name ?? 'Unknown',
-                'email' => $user->email ?? null,
-            ],
-            'sanctum' => fn ($user) => [
-                'id' => (string) $user->id,
-                'type' => 'sanctum_user',
-                'name' => $user->name ?? 'Unknown',
-                'email' => $user->email ?? null,
-            ],
+            'web' => fn ($user) => $this->mapUserContext($user, 'user'),
+            'api' => fn ($user) => $this->mapUserContext($user, 'api_user'),
+            'sanctum' => fn ($user) => $this->mapUserContext($user, 'sanctum_user'),
         ];
 
         foreach ($guards as $guard => $formatter) {
@@ -140,26 +120,40 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Get filtered stack trace (first 10 frames)
+     * Map the user object to a context array.
      */
-    private function getFilteredTrace(Throwable $e): string
+    private function mapUserContext($user, string $type): array
     {
-        $trace = $e->getTrace();
-        $filteredTrace = array_slice($trace, 0, 10);
-
-        // Remove sensitive information from trace
-        return json_encode(
-            array_map(function ($frame) {
-                unset($frame['args']); // Remove function arguments which might contain sensitive data
-
-                return $frame;
-            }, $filteredTrace),
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-        );
+        return [
+            'id' => (string) $user->id,
+            'type' => $type,
+            'name' => $user->name ?? 'Unknown',
+            'email' => $user->email ?? null,
+        ];
     }
 
     /**
-     * Sanitize file path to remove sensitive system information
+     * Get filtered stack trace (first 10 frames).
+     */
+    private function getFilteredTrace(Throwable $e): string
+    {
+        $trace = array_slice($e->getTrace(), 0, 10);
+
+        return json_encode(array_map(fn ($frame) => $this->sanitizeTraceFrame($frame), $trace), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Sanitize individual trace frame by removing sensitive information.
+     */
+    private function sanitizeTraceFrame(array $frame): array
+    {
+        unset($frame['args']);
+
+        return $frame;
+    }
+
+    /**
+     * Sanitize file path to remove sensitive system information.
      */
     private function sanitizeFilePath(string $filePath): string
     {
@@ -167,54 +161,54 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Get request context for tracking
+     * Get request context for tracking.
      */
     private function getRequestContext(Request $request): array
     {
         return [
             'request_id' => $request->header('X-Request-ID') ?? Str::uuid()->toString(),
-            'session_id' => $request->hasSession() ? $request->session()->getId() : null,
+            'session_id' => $request->session()->getId() ?? null,
             'correlation_id' => $request->header('X-Correlation-ID'),
         ];
     }
 
     /**
-     * Sanitize request data by removing sensitive information
+     * Sanitize request data by removing sensitive information.
      */
     private function sanitizeRequestData(Request $request): array
     {
         $sensitiveFields = [
-            'password', 'password_confirmation', 'token', 'api_key',
-            'secret', 'private_key', 'credit_card', 'ssn', 'social_security',
+            'password', 'password_confirmation', 'token', 'api_key', 'secret', 'private_key',
+            'credit_card', 'ssn', 'social_security',
         ];
 
         $input = $request->except($sensitiveFields);
-        $query = $request->query();
-
-        // Remove sensitive data from nested arrays
-        array_walk_recursive($input, function (&$value, $key) use ($sensitiveFields) {
-            if (in_array(mb_strtolower($key), $sensitiveFields)) {
-                $value = '[REDACTED]';
-            }
-        });
+        array_walk_recursive($input, fn (&$value, $key) => $this->sanitizeSensitiveData($key, $value, $sensitiveFields));
 
         return [
             'input' => $input,
-            'query' => $query,
+            'query' => $request->query(),
             'files' => $request->hasFile('*') ? array_keys($request->allFiles()) : [],
         ];
     }
 
     /**
-     * Sanitize headers by removing sensitive information
+     * Sanitize sensitive data in the input.
+     */
+    private function sanitizeSensitiveData(string $key, &$value, array $sensitiveFields): void
+    {
+        if (in_array(mb_strtolower($key), $sensitiveFields)) {
+            $value = '[REDACTED]';
+        }
+    }
+
+    /**
+     * Sanitize headers by removing sensitive information.
      */
     private function sanitizeHeaders(Request $request): array
     {
+        $sensitiveHeaders = ['authorization', 'cookie', 'x-api-key', 'x-auth-token'];
         $headers = $request->headers->all();
-
-        $sensitiveHeaders = [
-            'authorization', 'cookie', 'x-api-key', 'x-auth-token',
-        ];
 
         foreach ($sensitiveHeaders as $header) {
             if (isset($headers[$header])) {
@@ -226,20 +220,15 @@ abstract class BaseSystemExceptionHandler
     }
 
     /**
-     * Generate tags for easier filtering and categorization
+     * Generate tags for easier filtering and categorization.
      */
     private function generateTags(Throwable $e, Request $request): array
     {
-        $tags = [];
-
-        // Environment tag
-        $tags[] = config('app.env');
-
-        // Exception type tag
-        $tags[] = mb_strtolower($this->getExceptionType($e));
-
-        // HTTP method tag
-        $tags[] = mb_strtolower($request->getMethod());
+        $tags = [
+            config('app.env'),
+            mb_strtolower($this->getExceptionType($e)),
+            mb_strtolower($request->getMethod()),
+        ];
 
         // Status code category
         $statusCode = $this->getStatusCode($e);
@@ -250,18 +239,10 @@ abstract class BaseSystemExceptionHandler
         }
 
         // API vs Web request
-        if ($request->expectsJson() || $request->is('api/*')) {
-            $tags[] = 'api';
-        } else {
-            $tags[] = 'web';
-        }
+        $tags[] = $request->expectsJson() || $request->is('api/*') ? 'api' : 'web';
 
         // Authentication status
-        if (auth()->check()) {
-            $tags[] = 'authenticated';
-        } else {
-            $tags[] = 'guest';
-        }
+        $tags[] = auth()->check() ? 'authenticated' : 'guest';
 
         return $tags;
     }

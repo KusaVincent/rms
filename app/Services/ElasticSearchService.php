@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Exceptions\SystemExceptionHandler;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\Exception\AuthenticationException;
@@ -41,30 +42,29 @@ final class ElasticSearchService
     /**
      * Test the connection to the Elasticsearch server.
      */
-    public function testConnection(): string
+    public function testConnection(): string|array
     {
         try {
             $response = $this->client->ping();
-        } catch (ClientResponseException|ServerResponseException $e) {
-            //
-        }
 
-        return $response ? 'Connection successful' : 'Connection failed';
+            return $response ? 'Connection successful' : 'Connection failed';
+        } catch (ClientResponseException|ServerResponseException $e) {
+            return SystemExceptionHandler::handleElasticsearchException($e);
+        }
     }
 
     public function indexExists(string $indexName): bool
     {
         try {
             return $this->client->indices()->exists(['index' => $indexName])->asBool();
-        } catch (ClientResponseException|ServerResponseException $e) {
-            return false;
+        } catch (ClientResponseException|ServerResponseException|MissingParameterException $e) {
+            return false; // Handled silently, but can be logged as needed
         }
     }
 
     /**
      * Create an index in Elasticsearch with the given name and default settings.
      */
-
     public function createIndex(string $indexName, array $settings = [], array $mappings = []): array
     {
         $params = [
@@ -76,21 +76,17 @@ final class ElasticSearchService
                 ],
                 'mappings' => $mappings ?: [
                     'properties' => [
-                        'title' => [
-                            'type' => 'text',
-                        ],
-                        'content' => [
-                            'type' => 'text',
-                        ],
+                        'title' => ['type' => 'text'],
+                        'content' => ['type' => 'text'],
                     ],
                 ],
             ],
         ];
 
         try {
-            return $this->client->indices()->create($params)->asArray(); // <-- fix here
+            return $this->client->indices()->create($params)->asArray();
         } catch (ClientResponseException|ServerResponseException|MissingParameterException $e) {
-            return [];
+            return SystemExceptionHandler::handleElasticsearchException($e); // Use handler for error response
         }
     }
 
@@ -99,7 +95,7 @@ final class ElasticSearchService
         try {
             return $this->client->indices()->delete(['index' => $indexName])->asArray();
         } catch (ClientResponseException|ServerResponseException $e) {
-            return [];
+            return SystemExceptionHandler::handleElasticsearchException($e);
         }
     }
 
@@ -114,15 +110,14 @@ final class ElasticSearchService
         ];
 
         try {
-            return $this->client->index($params)->asArray(); // <- Fix: add asArray()
+            return $this->client->index($params)->asArray();
         } catch (ClientResponseException|ServerResponseException|MissingParameterException $e) {
-            return [];
+            return SystemExceptionHandler::handleElasticsearchException($e);
         }
     }
 
     /**
      * Perform a bulk index operation with the given data.
-     *
      *
      * @throws Exception
      */
@@ -139,7 +134,6 @@ final class ElasticSearchService
                         '_index' => $indexName,
                     ],
                 ];
-
                 $params['body'][] = $item;
             } else {
                 $params['body'][] = [
@@ -148,16 +142,18 @@ final class ElasticSearchService
                         '_id' => $elastic_prop[0]['_id'],
                     ],
                 ];
-
                 $params['body'][] = ['doc' => $item];
             }
         }
 
         if (! empty($params['body'])) {
-            $response = $this->client->bulk($params);
-
-            if (isset($response['errors']) && $response['errors']) {
-                throw new Exception('Bulk operation failed: '.json_encode($response['items']));
+            try {
+                $response = $this->client->bulk($params);
+                if (isset($response['errors']) && $response['errors']) {
+                    throw new Exception('Bulk operation failed: '.json_encode($response['items']));
+                }
+            } catch (Exception $e) {
+                return SystemExceptionHandler::handleElasticsearchException($e);
             }
         }
 
@@ -176,16 +172,14 @@ final class ElasticSearchService
             'body' => [
                 'from' => $from,
                 'size' => $pageSize,
-                'query' => [
-                    'match_all' => new stdClass(),
-                ],
+                'query' => ['match_all' => new stdClass()],
             ],
         ];
 
         try {
             $response = $this->client->search($params);
         } catch (ClientResponseException|ServerResponseException $e) {
-            //
+            return SystemExceptionHandler::handleElasticsearchException($e); // Use handler for error response
         }
 
         if (isset($response['hits']['hits'])) {
@@ -208,18 +202,14 @@ final class ElasticSearchService
         $params = [
             'index' => $indexName,
             'body' => [
-                'query' => [
-                    'match' => [
-                        '_id' => $id,
-                    ],
-                ],
+                'query' => ['match' => ['_id' => $id]],
             ],
         ];
 
         try {
             $response = $this->client->search($params);
         } catch (ClientResponseException|ServerResponseException $e) {
-            //
+            return SystemExceptionHandler::handleElasticsearchException($e); // Use handler for error response
         }
 
         if (isset($response['hits']['hits'][0])) {
@@ -229,7 +219,11 @@ final class ElasticSearchService
         return 'Document not found';
     }
 
-    public function logError(array $errorData) {}
+    public function logError(array $errorData): void
+    {
+        // Assuming logging is handled by a logger service
+        // You can log the error details to Elasticsearch, a file, or any logging service
+    }
 
     /**
      * Verify if a document with the given ID exists in the specified index.
@@ -237,11 +231,12 @@ final class ElasticSearchService
     private function verifyExists(string $index, string $id): array
     {
         try {
-            $data = $this->client->search(['index' => $index,
+            $data = $this->client->search([
+                'index' => $index,
                 'body' => ['query' => ['bool' => ['must' => ['term' => ['id' => $id]]]]],
             ]);
         } catch (ClientResponseException|ServerResponseException $e) {
-            //
+            return SystemExceptionHandler::handleElasticsearchException($e); // Use handler for error response
         }
 
         return $data['hits']['hits'];

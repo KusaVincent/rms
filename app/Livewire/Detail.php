@@ -25,10 +25,28 @@ final class Detail extends Component
 
         try {
             $this->property = $this->relatedProperties($slug);
-            LogHelper::success("Property with ID _{$slug} fetched successfully");
-        } catch (ModelNotFoundException $e) {
 
-            LogHelper::info("Property with ID _{$slug}_ not found: ".$e->getMessage());
+            LogHelper::success(
+                message: 'Property fetched successfully.',
+                status: 200,
+                request: request(),
+                additionalData: [
+                    'slug' => $slug,
+                    'property_id' => $this->property->id,
+                    'component' => 'Detail',
+                ]
+            );
+        } catch (ModelNotFoundException $e) {
+            LogHelper::exception(
+                $e,
+                status: 404,
+                request: request(),
+                additionalData: [
+                    'slug' => $slug,
+                    'component' => 'Detail',
+                ]
+            );
+
             ToastMagic::info('Property not found. You can check more properties below');
             $this->redirectRoute('properties', navigate: true);
         }

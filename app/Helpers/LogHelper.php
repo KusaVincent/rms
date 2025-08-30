@@ -5,56 +5,92 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 use App\Facades\ElasticSearch;
+use Illuminate\Http\Request;
+use Throwable;
 
 final class LogHelper
 {
-    public static function error($message, $status = 500)
+    public static function error(string $message, int $status = 500, ?Request $request = null, array $additionalData = []): array
     {
-        return ElasticSearch::populateIndex('error', [
-            'type' => 'Exception',
-            'message' => $message,
-            'status' => $status,
-            'timestamp' => now()->toIso8601String(),
-        ]);
+        return self::log('error', 'Exception', $message, $status, $request, $additionalData);
     }
 
-    public static function success($message, $status = 200)
+    public static function success(string $message, int $status = 200, ?Request $request = null, array $additionalData = []): array
     {
-        return ElasticSearch::populateIndex('success', [
-            'type' => 'Message',
-            'message' => $message,
-            'status' => $status,
-            'timestamp' => now()->toIso8601String(),
-        ]);
+        return self::log('success', 'Message', $message, $status, $request, $additionalData);
     }
 
-    public static function warning($message, $status = 400)
+    public static function warning(string $message, int $status = 400, ?Request $request = null, array $additionalData = []): array
     {
-        return ElasticSearch::populateIndex('warning', [
-            'type' => 'Warning',
-            'message' => $message,
-            'status' => $status,
-            'timestamp' => now()->toIso8601String(),
-        ]);
+        return self::log('warning', 'Warning', $message, $status, $request, $additionalData);
     }
 
-    public static function debug($message, $status = 200)
+    public static function debug(string $message, int $status = 200, ?Request $request = null, array $additionalData = []): array
     {
-        return ElasticSearch::populateIndex('debug', [
-            'type' => 'DEBUG',
-            'message' => $message,
-            'status' => $status,
-            'timestamp' => now()->toIso8601String(),
-        ]);
+        return self::log('debug', 'Debug', $message, $status, $request, $additionalData);
     }
 
-    public static function info($message, $status = 100)
+    public static function info(string $message, int $status = 100, ?Request $request = null, array $additionalData = []): array
     {
-        return ElasticSearch::populateIndex('info', [
-            'type' => 'INFO',
+        return self::log('info', 'Info', $message, $status, $request, $additionalData);
+    }
+
+    public static function exception(Throwable $e, int $status = 500, ?Request $request = null, array $additionalData = []): array
+    {
+        $trace = collect($e->getTrace())->take(10)->map(function ($frame) {
+            unset($frame['args']); // avoid leaking sensitive data
+
+            return $frame;
+        });
+
+        $log = [
+            'type' => class_basename($e),
+            'message' => $e->getMessage(),
+            'status' => $status,
+            'file' => str_replace(base_path(), '', $e->getFile()),
+            'line' => $e->getLine(),
+            'trace' => $trace,
+            'timestamp' => now()->toIso8601String(),
+        ];
+
+        $log = self::getArr($request, $log, $additionalData);
+
+        return ElasticSearch::populateIndex('log_error', $log);
+    }
+
+    private static function getArr(?Request $request, array $log, array $additionalData): array
+    {
+        if ($request) {
+            $log['uri'] = $request->getRequestUri();
+            $log['method'] = $request->getMethod();
+            $log['ip'] = $request->ip();
+            $log['user_agent'] = $request->userAgent();
+            $log['user'] = auth()->check() ? [
+                'id' => (string) auth()->id(),
+                'email' => auth()->user()->email ?? null,
+            ] : null;
+        }
+
+        return array_merge($log, $additionalData);
+    }
+
+    private static function log(
+        string $index,
+        string $type,
+        string $message,
+        int $status,
+        ?Request $request = null,
+        array $additionalData = []
+    ): array {
+        $log = [
+            'type' => $type,
             'message' => $message,
             'status' => $status,
             'timestamp' => now()->toIso8601String(),
-        ]);
+        ];
+
+        $log = self::getArr($request, $log, $additionalData);
+
+        return ElasticSearch::populateIndex('log_'.$index, $log);
     }
 }
