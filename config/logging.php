@@ -20,7 +20,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'elastic'),
 
     /*
     |--------------------------------------------------------------------------
@@ -53,6 +53,11 @@ return [
     */
 
     'channels' => [
+        'elasticsearch' => [
+            'driver' => 'custom',
+            'via' => App\Logging\ElasticLogger::class,
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
 
         'stack' => [
             'driver' => 'stack',

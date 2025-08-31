@@ -15,7 +15,7 @@ use Exception;
 use RuntimeException;
 use stdClass;
 
-final class ElasticSearchService
+final readonly class ElasticSearchService
 {
     private Client $client;
 
@@ -24,9 +24,9 @@ final class ElasticSearchService
      */
     public function __construct()
     {
-        $username = config('services.elk.username') ?? 'elastic';
-        $password = config('services.elk.password') ?? 'changeme';
-        $host = config('services.elk.host_ip') ?? '192.168.56.10:9200';
+        $host = config('services.elk.host_ip');
+        $username = config('services.elk.username');
+        $password = config('services.elk.password');
 
         if ($username === null || $password === null) {
             throw new RuntimeException('Missing ELK credentials in config/services.php or .env');
@@ -57,7 +57,7 @@ final class ElasticSearchService
     {
         try {
             return $this->client->indices()->exists(['index' => $indexName])->asBool();
-        } catch (ClientResponseException|ServerResponseException|MissingParameterException $e) {
+        } catch (ClientResponseException|ServerResponseException|MissingParameterException) {
             return false; // Handled silently, but can be logged as needed
         }
     }
@@ -70,11 +70,11 @@ final class ElasticSearchService
         $params = [
             'index' => $indexName,
             'body' => [
-                'settings' => $settings ?: [
+                'settings' => $settings !== [] ? $settings : [
                     'number_of_shards' => 1,
                     'number_of_replicas' => 0,
                 ],
-                'mappings' => $mappings ?: [
+                'mappings' => $mappings !== [] ? $mappings : [
                     'properties' => [
                         'title' => ['type' => 'text'],
                         'content' => ['type' => 'text'],
@@ -128,7 +128,7 @@ final class ElasticSearchService
         foreach ($data as $item) {
             $elastic_prop = $this->verifyExists($indexName, $item['id']);
 
-            if (! count($elastic_prop)) {
+            if (count($elastic_prop) === 0) {
                 $params['body'][] = [
                     'create' => [
                         '_index' => $indexName,
@@ -146,7 +146,7 @@ final class ElasticSearchService
             }
         }
 
-        if (! empty($params['body'])) {
+        if (isset($params['body']) && $params['body'] !== []) {
             try {
                 $response = $this->client->bulk($params);
                 if (isset($response['errors']) && $response['errors']) {
@@ -212,17 +212,18 @@ final class ElasticSearchService
             return SystemExceptionHandler::handleElasticsearchException($e); // Use handler for error response
         }
 
-        if (isset($response['hits']['hits'][0])) {
-            return $response['hits']['hits'][0];
-        }
-
-        return 'Document not found';
+        return $response['hits']['hits'][0] ?? 'Document not found';
     }
 
-    public function logError(array $errorData): void
+    public function logError(): void
     {
         // Assuming logging is handled by a logger service
         // You can log the error details to Elasticsearch, a file, or any logging service
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
     }
 
     /**

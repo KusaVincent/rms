@@ -25,25 +25,18 @@ final class ErrorLogIndexCommand extends Command
 
     /**
      * The name of the index.
-     *
-     * @var string
      */
-    protected string $indexName = 'error-logs';
-
-    /**
-     * The Elasticsearch service instance.
-     *
-     * @var ElasticSearchService
-     */
-    protected ElasticSearchService $elasticsearchService;
+    private string $indexName = 'error-logs';
 
     /**
      * Create a new command instance.
      */
-    public function __construct(ElasticSearchService $elasticsearchService)
+    public function __construct(/**
+     * The Elasticsearch service instance.
+     */
+    private readonly ElasticSearchService $elasticsearchService)
     {
         parent::__construct();
-        $this->elasticsearchService = $elasticsearchService;
     }
 
     /**

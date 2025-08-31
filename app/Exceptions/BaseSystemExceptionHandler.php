@@ -47,7 +47,7 @@ abstract class BaseSystemExceptionHandler
             'status' => $this->getStatusCode($e),
             'uri' => $request->getRequestUri(),
             'method' => $request->getMethod(),
-            'user' => $this->getUserContext($request),
+            'user' => $this->getUserContext(),
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'trace' => $this->getFilteredTrace($e),
@@ -102,20 +102,18 @@ abstract class BaseSystemExceptionHandler
     /**
      * Retrieve user context from authentication guards.
      */
-    private function getUserContext(Request $request): ?array
+    private function getUserContext(): ?array
     {
         $guards = [
-            'web' => fn ($user) => $this->mapUserContext($user, 'user'),
-            'api' => fn ($user) => $this->mapUserContext($user, 'api_user'),
-            'sanctum' => fn ($user) => $this->mapUserContext($user, 'sanctum_user'),
+            'web' => fn ($user): array => $this->mapUserContext($user, 'user'),
+            'api' => fn ($user): array => $this->mapUserContext($user, 'api_user'),
+            'sanctum' => fn ($user): array => $this->mapUserContext($user, 'sanctum_user'),
         ];
-
         foreach ($guards as $guard => $formatter) {
             if (auth($guard)->check()) {
                 return $formatter(auth($guard)->user());
             }
         }
-
         return null;
     }
 
@@ -139,7 +137,7 @@ abstract class BaseSystemExceptionHandler
     {
         $trace = array_slice($e->getTrace(), 0, 10);
 
-        return json_encode(array_map(fn ($frame) => $this->sanitizeTraceFrame($frame), $trace), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return json_encode(array_map(fn (array $frame): array => $this->sanitizeTraceFrame($frame), $trace), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**

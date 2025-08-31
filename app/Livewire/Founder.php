@@ -10,7 +10,6 @@ use App\Traits\ChecksServiceAvailability;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 final class Founder extends Component

@@ -52,9 +52,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(function (Throwable $e, Request $request) {
             // Only handle API requests and JSON-expected requests
-//            if (! $request->expectsJson() && ! $request->is('api/*')) {
-//                return null; // Let Laravel handle web requests normally
-//            }
+            //            if (! $request->expectsJson() && ! $request->is('api/*')) {
+            //                return null; // Let Laravel handle web requests normally
+            //            }
 
             $className = get_class($e);
             $handlers = SystemExceptionHandler::$handlers;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
-final class SystemExceptionHandler extends BaseSystemExceptionHandler
+class SystemExceptionHandler extends BaseSystemExceptionHandler
 {
     public static array $handlers = [
         AuthenticationException::class => 'handleAuthenticationException',
@@ -32,6 +32,24 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
         QueryException::class => 'handleQueryException',
         AccessDeniedHttpException::class => 'handleAuthenticationException',
     ];
+
+    public static function handleElasticsearchException(Throwable $e): array
+    {
+        // Log the exception for monitoring or debugging
+        Log::error('Elasticsearch Error: '.$e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        // Return a generic error response with the exception message
+        return [
+            'error' => [
+                'type' => 'ElasticsearchException',
+                'status' => 500,
+                'message' => 'An error occurred while interacting with Elasticsearch. Please try again later.',
+            ],
+        ];
+    }
 
     /**
      * Handle Authentication Exception (401 Unauthorized).
@@ -48,8 +66,9 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
      */
     public function handleAuthorizationException(AuthorizationException $e, Request $request): JsonResponse
     {
-        // Log custom message for authorization exceptions
-        Log::notice(basename(get_class($e)).' - '.$e->getMessage().' - Line: '.$e->getLine());
+        $this->logToElasticsearch($e, $request);
+
+        Log::notice(basename($e::class).' - '.$e->getMessage().' - Line: '.$e->getLine());
 
         return $this->errorResponse($e, 403);
     }
@@ -59,6 +78,8 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
      */
     public function handleMethodNotAllowedHttpException(MethodNotAllowedHttpException $e, Request $request): JsonResponse
     {
+        $this->logToElasticsearch($e, $request);
+
         return $this->errorResponse($e, 405);
     }
 
@@ -67,6 +88,8 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
      */
     public function handleHttpException(HttpException $e, Request $request): JsonResponse
     {
+        $this->logToElasticsearch($e, $request);
+
         return $this->errorResponse($e, $e->getStatusCode());
     }
 
@@ -79,7 +102,7 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
         $this->logToElasticsearch($e, $request);
 
         // Map validation errors into response format
-        $errors = collect($e->errors())->map(fn ($messages, $field) => [
+        $errors = collect($e->errors())->map(fn ($messages, $field): array => [
             'field' => $field,
             'messages' => $messages,
         ]);
@@ -92,9 +115,19 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
     /**
      * Handle Not Found Exception (404 Not Found).
      */
-    public function handleNotFoundException(ModelNotFoundException|NotFoundHttpException $e, Request $request): JsonResponse
+    public function handleNotFoundException(ModelNotFoundException|NotFoundHttpException $e, Request $request): JsonResponse|RedirectResponse
     {
-        return $this->errorResponse($e, 404, 'Not Found '.$request->getRequestUri());
+        Log::warning('404 Not Found', [
+            'url' => $request->fullUrl(),
+            'message' => $e->getMessage(),
+            'exception' => $e,
+        ]);
+
+        if ($request->expectsJson()) {
+            return $this->errorResponse($e, 404, 'Not Found '.$request->getRequestUri());
+        }
+
+        return redirect()->route('home');
     }
 
     /**
@@ -113,12 +146,17 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
         return $this->errorResponse($e, 500);
     }
 
+    private static function getType(Throwable $e): string
+    {
+        return class_basename($e);
+    }
+
     /**
      * Helper to create error response in a consistent format.
      */
     private function errorResponse(Throwable $e, int $status, ?string $message = null): JsonResponse
     {
-        $message = $message ?? $e->getMessage();
+        $message ??= $e->getMessage();
 
         return response()->json([
             'error' => [
@@ -127,23 +165,5 @@ final class SystemExceptionHandler extends BaseSystemExceptionHandler
                 'message' => $message,
             ],
         ], $status);
-    }
-
-    public static function handleElasticsearchException(Exception $e): array
-    {
-        // Log the exception for monitoring or debugging
-        Log::error('Elasticsearch Error: ' . $e->getMessage(), [
-            'exception' => $e,
-            'trace' => $e->getTraceAsString()
-        ]);
-
-        // Return a generic error response with the exception message
-        return [
-            'error' => [
-                'type' => 'ElasticsearchException',
-                'status' => 500,
-                'message' => 'An error occurred while interacting with Elasticsearch. Please try again later.',
-            ]
-        ];
     }
 }
