@@ -22,9 +22,9 @@ final class SideBar extends Component
 
     public $negotiable = '';
 
-    public $locations = [];
+    public Collection $locations;
 
-    public $propertyTypes = [];
+    public Collection $propertyTypes;
 
     public Collection $results;
 
@@ -37,11 +37,29 @@ final class SideBar extends Component
         try {
             $this->locations = Location::select('id', 'town_city')->get();
             $this->propertyTypes = PropertyType::select('id', 'type_name')->get();
+
+            LogHelper::success(
+                message: 'Sidebar filters loaded successfully.',
+                request: request(),
+                additionalData: [
+                    'component' => 'SideBar',
+                    'user_id' => auth()->id(),
+                ]
+            );
         } catch (Exception $e) {
-            $this->locations = [];
-            $this->propertyTypes = [];
+            $this->locations = collect();
+            $this->propertyTypes = collect();
+
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'SideBar',
+                    'message' => 'Failed to load filter data',
+                ]
+            );
+
             ToastMagic::error('Failed to load data. Please try again later.');
-            LogHelper::error("Error fetching locations or property types: {$e->getMessage()}");
         }
     }
 
@@ -62,9 +80,12 @@ final class SideBar extends Component
 
     public function applyFilters(): void
     {
-        Cache::forget('filter_types_'.session()->getId());
-        Cache::forget('filter_locations_'.session()->getId());
-        Cache::forget('filter_negotiable_'.session()->getId());
+        $sessionId = session()->getId();
+        $user = auth()->user();
+
+        Cache::forget('filter_types_'.$sessionId);
+        Cache::forget('filter_locations_'.$sessionId);
+        Cache::forget('filter_negotiable_'.$sessionId);
 
         $criteria = [
             'limit' => $this->limit(),
@@ -74,25 +95,56 @@ final class SideBar extends Component
 
         try {
             if ($this->negotiable === 'Yes') {
-                Cache::set('filter_negotiable_'.session()->getId(), $this->negotiable, now()->addMinutes(5));
+                Cache::set('filter_negotiable_'.$sessionId, $this->negotiable, now()->addMinutes(5));
             }
 
-            if ($this->selectedLocations !== []) {
-                Cache::set('filter_locations_'.session()->getId(), $this->selectedLocations, now()->addMinutes(5));
+            if (! empty($this->selectedLocations)) {
+                Cache::set('filter_locations_'.$sessionId, $this->selectedLocations, now()->addMinutes(5));
             }
 
-            if ($this->selectedTypes !== []) {
-                Cache::set('filter_types_'.session()->getId(), $this->selectedTypes, now()->addMinutes(5));
+            if (! empty($this->selectedTypes)) {
+                Cache::set('filter_types_'.$sessionId, $this->selectedTypes, now()->addMinutes(5));
             }
+
+            $start = microtime(true);
 
             $this->results = PropertyFilterAction::execute($criteria);
 
-            LogHelper::info('Filter Result For Successful');
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Filters applied successfully.',
+                request: request(),
+                additionalData: [
+                    'component' => 'SideBar',
+                    'duration_ms' => $duration,
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'negotiable' => $this->negotiable,
+                    'selected_types' => $this->selectedTypes,
+                    'selected_locations' => $this->selectedLocations,
+                    'results_count' => $this->results->count(),
+                    'session_id' => $sessionId,
+                ]
+            );
 
             $this->dispatch('filter-results', $this->results);
         } catch (Exception $e) {
             $this->results = collect();
-            LogHelper::error("Error applying filters: {$e->getMessage()}");
+
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'SideBar',
+                    'user_id' => $user?->id,
+                    'negotiable' => $this->negotiable,
+                    'selected_types' => $this->selectedTypes,
+                    'selected_locations' => $this->selectedLocations,
+                    'session_id' => $sessionId,
+                ]
+            );
+
             ToastMagic::error('Failed to apply filters. Please try again later.');
         }
     }

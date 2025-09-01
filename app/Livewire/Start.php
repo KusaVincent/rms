@@ -26,8 +26,21 @@ final class Start extends Component
     public function render(): View
     {
         if ($this->serviceUnavailable) {
+            LogHelper::info(
+                message: 'Service unavailable on Start component.',
+                request: request(),
+                additionalData: [
+                    'component' => 'Start',
+                    'service_key' => $this->serviceKey,
+                    'user_id' => auth()->id(),
+                ]
+            );
+
             return view('livewire.empty');
         }
+
+        $start = microtime(true);
+        $user = auth()->user();
 
         try {
             $saleStart = Cache::remember(
@@ -35,18 +48,48 @@ final class Start extends Component
                 now()->addDay(),
                 fn () => Property::count()
             );
+
             $agentStart = Cache::remember(
                 'agent_start_count',
                 now()->addDay(),
                 fn () => Property::count()
             );
+
             $listingStart = Cache::remember(
                 'listing_start_count',
                 now()->addDay(),
                 fn () => Property::count()
             );
+
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Start component metrics fetched successfully.',
+                request: request(),
+                additionalData: [
+                    'component' => 'Start',
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'duration_ms' => $duration,
+                    'metrics' => [
+                        'sales' => $saleStart,
+                        'agents' => $agentStart,
+                        'listings' => $listingStart,
+                    ],
+                ]
+            );
         } catch (Exception $e) {
-            LogHelper::error('Error fetching property count: '.$e->getMessage());
+            LogHelper::exception(
+                $e,
+                status: 500,
+                request: request(),
+                additionalData: [
+                    'component' => 'Start',
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                ]
+            );
+
             $saleStart = 0;
             $agentStart = 0;
             $listingStart = 0;

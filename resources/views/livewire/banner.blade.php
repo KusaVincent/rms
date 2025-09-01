@@ -27,7 +27,7 @@
                 {{ __('Get Started Now') }}
             </a>
 
-            <livewire:search/>
+            <livewire:search redirectRoute="home" />
         </x-layouts.header-section>
     @elseif(Route::currentRouteName() === 'properties')
         <x-layouts.header-section title="Properties to Suit Your Needs"
@@ -36,7 +36,7 @@
                 ['label' => 'Properties']
             ]"
         >
-            <livewire:search/>
+            <livewire:search redirectRoute="properties" />
         </x-layouts.header-section>
     @elseif(Route::currentRouteName() === 'details')
         <x-layouts.header-section title="Discover Your Next Home"

@@ -24,12 +24,15 @@ final class Search extends Component
 
     public Collection $results;
 
+    public string $redirectRoute = 'home';
+
     public function updatedSearch(): void
     {
-
-        Cache::forget('search_'.session()->getId());
-
+        $sessionId = session()->getId();
+        $user = auth()->user();
         $this->results = new Collection();
+
+        Cache::forget("search_{$sessionId}");
 
         $criteria = [
             'limit' => $this->limit(),
@@ -37,24 +40,53 @@ final class Search extends Component
             'relations' => $this->relations(),
         ];
 
-        if ($this->search === '') {
-            $this->redirectRoute('properties', navigate: true);
-
+        if (empty($this->search)) {
+            $this->redirectRoute($this->redirectRoute, navigate: true);
             return;
         }
 
         try {
-            Cache::set('search_'.session()->getId(), $this->search, now()->addMinutes(5));
+            $start = microtime(true);
+
+            Cache::set("search_{$sessionId}", $this->search, now()->addMinutes(5));
 
             $this->results = PropertyFilterAction::execute($criteria);
 
-            LogHelper::error("Search for: {$this->search}");
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Search executed successfully.',
+                request: request(),
+                additionalData: [
+                    'component' => 'Search Livewire Component',
+                    'duration_ms' => $duration,
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'search_query' => $this->search,
+                    'criteria' => $criteria,
+                    'results_count' => $this->results->count(),
+                    'session_id' => $sessionId,
+                ]
+            );
 
             $this->dispatch('search-results', $this->results);
         } catch (Exception $e) {
             $this->results = new Collection();
+
             ToastMagic::error('An error occurred while searching. Please try again.');
-            LogHelper::error("Search failed for query '{$this->search}': {$e->getMessage()}");
+
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'Search Livewire Component',
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'search_query' => $this->search,
+                    'criteria' => $criteria,
+                    'session_id' => $sessionId,
+                ]
+            );
         }
     }
 }

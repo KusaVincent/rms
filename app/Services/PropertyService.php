@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Helpers\LogHelper;
 use App\Models\Property;
 use App\Traits\Limitable;
 use App\Traits\Paginatable;
@@ -11,9 +12,7 @@ use App\Traits\Relatable;
 use App\Traits\Selectable;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 final class PropertyService
 {
@@ -21,7 +20,37 @@ final class PropertyService
 
     public function findPropertyById(string $propertySlug): ?Property
     {
-        return $this->relatedProperties($propertySlug, true);
+        try {
+            $property = $this->relatedProperties($propertySlug, true);
+
+            LogHelper::success(
+                message: 'Property found by slug.',
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'findPropertyById',
+                    'slug' => $propertySlug,
+                    'property_id' => $property?->id,
+                    'user_id' => auth()->id(),
+                ]
+            );
+
+            return $property;
+        } catch (Exception $e) {
+            LogHelper::exception(
+                $e,
+                status: 404,
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'findPropertyById',
+                    'slug' => $propertySlug,
+                    'user_id' => auth()->id(),
+                ]
+            );
+
+            return null;
+        }
     }
 
     /**
@@ -29,36 +58,58 @@ final class PropertyService
      */
     public function resolveProperties(string $path, ?Property $property): Collection|LengthAwarePaginator
     {
+        $start = microtime(true);
+
         try {
-            switch ($path) {
-                case 'home':
-                    return Property::select($this->selects())
-                        ->isAvailable()
-                        ->with($this->relations())
-                        ->inRandomOrder()
-                        ->take($this->limit())
-                        ->get();
+            $result = match ($path) {
+                'home' => Property::select($this->selects())
+                    ->isAvailable()
+                    ->with($this->relations())
+                    ->inRandomOrder()
+                    ->take($this->limit())
+                    ->get(),
 
-                case 'properties':
-                    return Property::select($this->selects())
-                        ->isAvailable()
-                        ->with($this->relations())
-                        ->orderBy('created_at', 'desc')
-                        ->paginate($this->getPerPage(), pageName: 'properties-page');
+                'properties' => Property::select($this->selects())
+                    ->isAvailable()
+                    ->with($this->relations())
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($this->getPerPage(), pageName: 'properties-page'),
 
-                case 'details':
-                    return $this->getRelatedProperties($property);
+                'details' => $this->getRelatedProperties($property),
 
-                default:
-                    Log::warning("Unrecognized path: {$path}");
+                default => collect()
+            };
 
-                    return collect();
-            }
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Properties resolved successfully.',
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'resolveProperties',
+                    'path' => $path,
+                    'user_id' => auth()->id(),
+                    'user_email' => auth()->user()?->email,
+                    'duration_ms' => $duration,
+                    'result_count' => $result instanceof Collection ? $result->count() : $result->total(),
+                    'property_id' => $property?->id,
+                ]
+            );
+
+            return $result;
         } catch (Exception $e) {
-            Log::error("Error resolving properties for path '{$path}': ".$e->getMessage(), [
-                'path' => $path,
-                'property' => $property,
-            ]);
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'resolveProperties',
+                    'path' => $path,
+                    'user_id' => auth()->id(),
+                    'property_id' => $property?->id,
+                ]
+            );
 
             return collect();
         }
@@ -70,16 +121,24 @@ final class PropertyService
     private function getRelatedProperties(?Property $property): Collection
     {
         if (! $property instanceof Property) {
-            return new Collection;
+            LogHelper::info(
+                message: 'No property provided to fetch related properties.',
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'getRelatedProperties',
+                ]
+            );
+
+            return collect();
         }
 
         try {
-            /**
-             * @return Builder|Builder<Property>
-             */
+            $start = microtime(true);
+
             $query = Property::query();
 
-            return $query
+            $related = $query
                 ->select($this->selects(true))
                 ->isAvailable()
                 ->whereHas('propertyType', function ($query) use ($property): void {
@@ -90,10 +149,37 @@ final class PropertyService
                 ->inRandomOrder()
                 ->take($this->relatedLimit())
                 ->get();
-        } catch (Exception $e) {
-            Log::error("Failed to fetch related properties for property ID {$property->id}: {$e->getMessage()}");
 
-            return new Collection();
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Related properties fetched.',
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'getRelatedProperties',
+                    'property_id' => $property->id,
+                    'user_id' => auth()->id(),
+                    'related_count' => $related->count(),
+                    'duration_ms' => $duration,
+                ]
+            );
+
+            return $related;
+        } catch (Exception $e) {
+            LogHelper::exception(
+                $e,
+                status: 500,
+                request: request(),
+                additionalData: [
+                    'component' => 'PropertyService',
+                    'method' => 'getRelatedProperties',
+                    'property_id' => $property->id ?? null,
+                    'user_id' => auth()->id(),
+                ]
+            );
+
+            return collect();
         }
     }
 }

@@ -29,16 +29,74 @@ final class Founder extends Component
             return view('livewire.empty');
         }
 
+        $sessionId = session()->getId();
+        $user = auth()->user();
+
+        $start = microtime(true);
+
         try {
             $founders = Cache::remember('founders', now()->addYear(), fn () => ModelsFounder::all());
+
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Fetched founders successfully (from cache).',
+                request: request(),
+                additionalData: [
+                    'component' => 'Founder Livewire Component',
+                    'duration_ms' => $duration,
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'session_id' => $sessionId,
+                    'cached' => true,
+                    'founders_count' => $founders->count(),
+                ]
+            );
         } catch (Exception $e) {
-            LogHelper::error("Failed to fetch founders: {$e->getMessage()}");
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'Founder Livewire Component',
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'session_id' => $sessionId,
+                    'cached' => true,
+                ]
+            );
 
             try {
                 $founders = ModelsFounder::all();
+
+                $duration = round((microtime(true) - $start) * 1000, 2);
+
+                LogHelper::success(
+                    message: 'Fetched founders successfully (from DB fallback).',
+                    request: request(),
+                    additionalData: [
+                        'component' => 'Founder Livewire Component',
+                        'duration_ms' => $duration,
+                        'user_id' => $user?->id,
+                        'user_email' => $user?->email,
+                        'session_id' => $sessionId,
+                        'cached' => false,
+                        'founders_count' => $founders->count(),
+                    ]
+                );
             } catch (Exception $dbException) {
                 $founders = collect();
-                LogHelper::error("Failed to fetch founders from the database: {$dbException->getMessage()}");
+
+                LogHelper::exception(
+                    $dbException,
+                    request: request(),
+                    additionalData: [
+                        'component' => 'Founder Livewire Component',
+                        'user_id' => $user?->id,
+                        'user_email' => $user?->email,
+                        'session_id' => $sessionId,
+                        'cached' => false,
+                    ]
+                );
             }
         }
 

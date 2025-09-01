@@ -40,4 +40,26 @@ final class ContactForm extends Form
         Notification::route('mail', $this->email)
             ->notify(new CustomerSupportAcknowledgement($support));
     }
+
+    /**
+     * Get all form data as an array.
+     */
+    public function all(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'subject' => $this->subject,
+            'message' => $this->message,
+            'phone_number' => $this->phone_number,
+        ];
+    }
+
+    /**
+     * Get form data excluding specific keys (for logging or masking).
+     */
+    public function except(mixed $properties): array
+    {
+        return collect($this->all())->except($properties)->toArray();
+    }
 }

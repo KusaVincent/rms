@@ -19,12 +19,48 @@ final class Contact extends Component
 
     public function save(): RedirectResponse
     {
-        $this->form->store();
+        $sessionId = session()->getId();
+        $user = auth()->user();
+        $start = microtime(true);
 
-        LogHelper::success('Your message has been sent successfully!');
-        ToastMagic::success('Your message has been sent successfully!');
+        try {
+            $this->form->store();
 
-        return redirect()->back()->with('message', 'Your message has been sent successfully!');
+            $duration = round((microtime(true) - $start) * 1000, 2);
+
+            LogHelper::success(
+                message: 'Contact form submitted successfully.',
+                request: request(),
+                additionalData: [
+                    'component' => 'Contact Livewire Component',
+                    'duration_ms' => $duration,
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'session_id' => $sessionId,
+                    'form_data' => $this->form->except(['email', 'phone_number']),
+                ]
+            );
+
+            ToastMagic::success('Your message has been sent successfully!');
+
+            return redirect()->back()->with('message', 'Your message has been sent successfully!');
+        } catch (\Throwable $e) {
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'Contact Livewire Component',
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'session_id' => $sessionId,
+                    'form_data' => $this->form->except(['email', 'phone_number']),
+                ]
+            );
+
+            ToastMagic::error('Failed to send message. Please try again.');
+
+            return redirect()->back()->withErrors(['message' => 'Something went wrong.']);
+        }
     }
 
     public function render(): View

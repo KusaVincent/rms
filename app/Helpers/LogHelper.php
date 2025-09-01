@@ -38,7 +38,7 @@ final class LogHelper
     public static function exception(Throwable $e, int $status = 500, ?Request $request = null, array $additionalData = []): array
     {
         $trace = collect($e->getTrace())->take(10)->map(function (array $frame): array {
-            unset($frame['args']); // avoid leaking sensitive data
+            unset($frame['args']);
 
             return $frame;
         });
@@ -60,7 +60,7 @@ final class LogHelper
 
     private static function getArr(?Request $request, array $log, array $additionalData): array
     {
-        if ($request instanceof \Illuminate\Http\Request) {
+        if ($request instanceof Request) {
             $log['uri'] = $request->getRequestUri();
             $log['method'] = $request->getMethod();
             $log['ip'] = $request->ip();
