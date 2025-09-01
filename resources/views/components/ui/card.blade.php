@@ -1,9 +1,8 @@
-@props(['link', 'image', 'title', 'propertyType', 'rent' => 1, 'location', 'negotiable' => false])
+@props(['link', 'image', 'title', 'propertyType', 'rent' => 1, 'location', 'negotiable' => null])
 
 <div class="relative max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 flex flex-col overflow-hidden">
 
-    {{-- Diagonal Ribbon --}}
-    @if ($negotiable)
+    @if (!empty($negotiable->value) || $negotiable == 1)
         <div class="absolute top-0 right-0 z-10 overflow-hidden w-32 h-32">
             <div class="absolute -right-10 top-5 w-48 transform rotate-45 bg-blue-700 text-white text-sm font-semibold py-1 shadow-lg flex justify-center items-center">
                 Negotiable

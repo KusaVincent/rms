@@ -25,16 +25,23 @@ final class Detail extends Component
         $this->isCalledFromDetail = true;
 
         try {
+            $start = microtime(true);
+
             $this->property = $this->relatedProperties($slug);
+
+            $duration = round((microtime(true) - $start) * 1000, 2);
+            $user = auth()->user();
 
             LogHelper::success(
                 message: 'Property fetched successfully.',
-                status: 200,
                 request: request(),
                 additionalData: [
                     'slug' => $slug,
                     'property_id' => $this->property->id,
                     'component' => 'Detail',
+                    'duration_ms' => $duration,
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
                 ]
             );
         } catch (ModelNotFoundException $e) {

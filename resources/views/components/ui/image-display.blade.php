@@ -1,4 +1,4 @@
-@props(['src', 'alt', 'negotiable' => false])
+@props(['src', 'alt', 'negotiable' => ''])
 
 @once
     <style>
@@ -17,8 +17,7 @@
     <x-slot:trigger>
         <div class="relative bg-gray-200 h-[50vh] flex items-center justify-center rounded mb-8 overflow-hidden cursor-pointer">
 
-            {{-- Full Width Moving Ribbon --}}
-            @if($negotiable)
+            @if(!empty($negotiable->value))
                 <div class="absolute top-0 left-0 w-full overflow-hidden z-10">
                     <div class="whitespace-nowrap animate-[ribbon-slide_15s_linear_infinite]">
                         <div class="bg-blue-700 text-white text-sm font-semibold py-1 px-4 inline-block w-max">

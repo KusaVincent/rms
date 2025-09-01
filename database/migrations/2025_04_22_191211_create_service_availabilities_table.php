@@ -17,17 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('service_name');
             $table->string('service_key')->unique();
-            $table->boolean('is_active')->default(true);
+            $table->smallInteger('is_active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('service_availabilities');
     }
 };

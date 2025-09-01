@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Welcome;
 
+use App\Enums\ContactSection;
 use App\Models\Contact;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,7 @@ final class Footer extends Component
     public function render(): View
     {
         return view('livewire.welcome.footer', [
-            'contacts' => Contact::whereNot('section', 'contact')->get(),
+            'contacts' => Contact::whereNot('section', ContactSection::CONTACT)->get(),
         ]);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Enums\ContactSection;
 use App\Helpers\LogHelper;
 use App\Livewire\Forms\ContactForm;
 use App\Models\Contact as ModelsContact;
@@ -29,7 +30,7 @@ final class Contact extends Component
     public function render(): View
     {
         return view('livewire.contact', [
-            'contacts' => ModelsContact::whereNot('section', 'footer')->get(),
+            'contacts' => ModelsContact::whereNot('section', ContactSection::FOOTER)->get(),
         ]);
     }
 }

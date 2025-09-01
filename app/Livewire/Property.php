@@ -29,58 +29,145 @@ final class Property extends Component
 
     private $filterResults;
 
-    /**
-     * @returns LengthAwarePaginator<int, ModelsProperty>
-     * */
     private Collection|LengthAwarePaginator|null $properties = null;
 
     public function mount(PropertyService $propertyService, ResolvePropertyClassAction $resolveClassAction): void
     {
         $routeName = Route::currentRouteName();
+        $user = auth()->user();
+        $slug = Request::route('slug');
 
         try {
-            $propertyService1 = $propertyService;
-            $resolveClassAction1 = $resolveClassAction;
+            $startMount = microtime(true);
 
             if ($routeName === 'details') {
-                $slug = Request::route('slug');
-
-                $this->property = $propertyService1->findPropertyById($slug);
+                $startProperty = microtime(true);
+                $this->property = $propertyService->findPropertyById($slug);
+                $durationProperty = round((microtime(true) - $startProperty) * 1000, 2); // ms
 
                 if (! $this->property instanceof ModelsProperty) {
-                    LogHelper::warning("Property not found for ID: {$slug} ... {$routeName}");
-                    $this->redirectRoute($routeName, navigate: true);
+                    LogHelper::warning(
+                        message: 'Property not found.',
+                        request: request(),
+                        additionalData: [
+                            'slug' => $slug,
+                            'route' => $routeName,
+                            'user_id' => $user?->id,
+                            'ip' => request()->ip(),
+                            'duration_ms' => $durationProperty,
+                        ]
+                    );
+
+                    $this->redirectRoute('properties', navigate: true);
+
+                    return;
                 }
+
+                LogHelper::info(
+                    message: 'Property resolved successfully.',
+                    request: request(),
+                    additionalData: [
+                        'slug' => $slug,
+                        'property_id' => $this->property->id,
+                        'route' => $routeName,
+                        'user_id' => $user?->id,
+                        'duration_ms' => $durationProperty,
+                    ]
+                );
             }
 
-            $this->class = $resolveClassAction1->execute($routeName);
-            $this->properties = $propertyService1->resolveProperties($routeName, $this->property);
+            $startProps = microtime(true);
+            $this->class = $resolveClassAction->execute($routeName);
+            $this->properties = $propertyService->resolveProperties($routeName, $this->property);
+            $durationProps = round((microtime(true) - $startProps) * 1000, 2); // ms
+
+            LogHelper::info(
+                message: 'Properties loaded.',
+                request: request(),
+                additionalData: [
+                    'route' => $routeName,
+                    'properties_count' => $this->properties?->count(),
+                    'user_id' => $user?->id,
+                    'duration_ms' => $durationProps,
+                ]
+            );
+
+            $totalMount = round((microtime(true) - $startMount) * 1000, 2);
+
+            LogHelper::info(
+                message: 'mount() completed.',
+                request: request(),
+                additionalData: [
+                    'route' => $routeName,
+                    'user_id' => $user?->id,
+                    'total_duration_ms' => $totalMount,
+                ]
+            );
+
         } catch (InvalidArgumentException $e) {
-
             ToastMagic::error('Invalid property identifier provided.');
-            LogHelper::warning('Invalid argument encountered: '.$e->getMessage());
-            $this->redirectRoute($routeName, navigate: true);
-        } catch (Exception $e) {
+            LogHelper::warning(
+                message: 'Invalid argument encountered.',
+                request: request(),
+                additionalData: [
+                    'error' => $e->getMessage(),
+                    'route' => $routeName,
+                    'user_id' => $user?->id,
+                ]
+            );
+            $this->redirectRoute('properties', navigate: true);
 
-            LogHelper::error('An error occurred in mount: '.$e->getMessage());
+        } catch (Exception $e) {
             ToastMagic::error('Something went wrong. Please try again later.');
-            $this->redirectRoute($routeName, navigate: true);
+            LogHelper::error(
+                message: 'An unexpected error occurred in mount.',
+                request: request(),
+                additionalData: [
+                    'error' => $e->getMessage(),
+                    'route' => $routeName,
+                    'user_id' => $user?->id,
+                ]
+            );
+            $this->redirectRoute('properties', navigate: true);
         }
     }
 
     #[On('search-results')]
     public function setSearchResults($results): void
     {
+        $start = microtime(true);
         $this->searchResults = $results;
-        LogHelper::info('Searched Result');
+        $duration = round((microtime(true) - $start) * 1000, 2);
+
+        LogHelper::info(
+            message: 'Search results updated.',
+            request: request(),
+            additionalData: [
+                'results_count' => count($results),
+                'user_id' => auth()->id(),
+                'event' => 'search-results',
+                'duration_ms' => $duration,
+            ]
+        );
     }
 
     #[On('filter-results')]
     public function setFilterResults($results): void
     {
+        $start = microtime(true);
         $this->filterResults = $results;
+        $duration = round((microtime(true) - $start) * 1000, 2);
 
-        LogHelper::info('Filtered Result');
+        LogHelper::info(
+            message: 'Filter results updated.',
+            request: request(),
+            additionalData: [
+                'results_count' => count($results),
+                'user_id' => auth()->id(),
+                'event' => 'filter-results',
+                'duration_ms' => $duration,
+            ]
+        );
     }
 
     public function render(): View

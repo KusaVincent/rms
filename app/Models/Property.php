@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Casts\PaymentCast;
+use App\Enums\PropertyAvailable;
+use App\Enums\PropertyNegotiable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +39,8 @@ final class Property extends Model
 
     protected $casts = [
         'rent' => PaymentCast::class,
+        'available' => PropertyAvailable::class,
+        'negotiable' => PropertyNegotiable::class,
     ];
 
     public function sluggable(): array
@@ -117,7 +121,7 @@ final class Property extends Model
 
     public function scopeIsAvailable(Builder $query): void
     {
-        $query->where('available', true);
+        $query->where('available', PropertyAvailable::YES);
     }
 
     public function getSlugNameAttribute(): string

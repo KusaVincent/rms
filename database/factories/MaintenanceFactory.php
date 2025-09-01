@@ -26,7 +26,7 @@ final class MaintenanceFactory extends Factory
             'request_date' => $this->faker->dateTimeBetween('-1 year'),
             'tenant_id' => Tenant::inRandomOrder()->first()->id ?? Tenant::factory(),
             'property_id' => Property::inRandomOrder()->first()->id ?? Property::factory(),
-            'status' => $this->faker->randomElement(['Pending', 'In Progress', 'Completed']),
+            'status' => $this->faker->randomElement([0, 1, 2]),
             'completion_date' => $this->faker->boolean() ? $this->faker->dateTimeBetween('now', '+1 month') : null,
         ];
     }

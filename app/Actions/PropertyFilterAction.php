@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Enums\PropertyNegotiable;
 use App\Models\Property;
 use App\Traits\Limitable;
 use Illuminate\Support\Collection;
@@ -29,7 +30,7 @@ final class PropertyFilterAction
         }
 
         if (! empty($negotiable) && $negotiable === 'Yes') {
-            $query->where('negotiable', 1);
+            $query->where('negotiable', PropertyNegotiable::YES);
         }
 
         if (! empty($locations)) {

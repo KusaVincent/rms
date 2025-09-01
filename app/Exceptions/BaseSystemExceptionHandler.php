@@ -55,7 +55,7 @@ abstract class BaseSystemExceptionHandler
             'environment' => config('app.env'),
             'file' => $this->sanitizeFilePath($e->getFile()),
             'line' => $e->getLine(),
-            'context' => $this->getRequestContext($request),
+            'context' => rescue(fn () => $this->getRequestContext($request), []),
             'request_data' => $this->sanitizeRequestData($request),
             'headers' => $this->sanitizeHeaders($request),
             'response_time' => round($responseTime, 2),
@@ -104,16 +104,14 @@ abstract class BaseSystemExceptionHandler
      */
     private function getUserContext(): ?array
     {
-        $guards = [
-            'web' => fn ($user): array => $this->mapUserContext($user, 'user'),
-            'api' => fn ($user): array => $this->mapUserContext($user, 'api_user'),
-            'sanctum' => fn ($user): array => $this->mapUserContext($user, 'sanctum_user'),
-        ];
-        foreach ($guards as $guard => $formatter) {
-            if (auth($guard)->check()) {
-                return $formatter(auth($guard)->user());
+        try {
+            if (auth()->check()) {
+                return $this->mapUserContext(auth()->user(), 'user');
             }
+        } catch (\Throwable $e) {
+            return null;
         }
+
         return null;
     }
 
@@ -165,7 +163,7 @@ abstract class BaseSystemExceptionHandler
     {
         return [
             'request_id' => $request->header('X-Request-ID') ?? Str::uuid()->toString(),
-            'session_id' => $request->session()->getId() ?? null,
+            'session_id' => $request->hasSession() ? $request->session()->getId() : null,
             'correlation_id' => $request->header('X-Correlation-ID'),
         ];
     }

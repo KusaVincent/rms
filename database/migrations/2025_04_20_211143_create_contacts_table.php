@@ -19,19 +19,9 @@ return new class extends Migration
             $table->string('icon');
             $table->string('link');
             $table->string('link_text');
-            $table->enum('section', [
-                'all', 'contact', 'footer',
-            ])->default('all');
+            $table->smallInteger('section')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('contacts');
     }
 };
