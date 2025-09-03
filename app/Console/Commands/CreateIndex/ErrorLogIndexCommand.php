@@ -34,7 +34,7 @@ final class ErrorLogIndexCommand extends Command
     public function __construct(/**
      * The Elasticsearch service instance.
      */
-    private readonly ElasticSearchService $elasticsearchService)
+        private readonly ElasticSearchService $elasticsearchService)
     {
         parent::__construct();
     }

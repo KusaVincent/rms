@@ -98,11 +98,11 @@ final class SideBar extends Component
                 Cache::set('filter_negotiable_'.$sessionId, $this->negotiable, now()->addMinutes(5));
             }
 
-            if (! empty($this->selectedLocations)) {
+            if ($this->selectedLocations !== []) {
                 Cache::set('filter_locations_'.$sessionId, $this->selectedLocations, now()->addMinutes(5));
             }
 
-            if (! empty($this->selectedTypes)) {
+            if ($this->selectedTypes !== []) {
                 Cache::set('filter_types_'.$sessionId, $this->selectedTypes, now()->addMinutes(5));
             }
 

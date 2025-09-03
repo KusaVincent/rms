@@ -12,7 +12,6 @@ use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Component;
-use Log;
 
 final class Detail extends Component
 {

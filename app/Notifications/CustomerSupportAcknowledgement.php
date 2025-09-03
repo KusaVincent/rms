@@ -40,19 +40,10 @@ final class CustomerSupportAcknowledgement extends Notification implements Shoul
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            // set a dynamic subject line
             ->subject('We’ve received your request: '.$this->support->subject)
-            // greet by their name
-            ->greeting('Hello '.$this->support->name.',')
-            // repurpose their message back to them
-            ->line('Thank you for contacting us. Here’s what we got from you:')
-            ->line('**Subject:** '.$this->support->subject)
-            ->line('**Message:** '.$this->support->message)
-            ->line('**Phone number on file:** '.$this->support->phone_number)
-            // give them next steps
-            ->line('Our support team will reach out to you at '.$this->support->email.' within 24 hours.')
-            ->salutation('Kind regards,')
-            ->line('The Support Team');
+            ->markdown('emails.customer_support_ack', [
+                'support' => $this->support,
+            ]);
     }
 
     /**

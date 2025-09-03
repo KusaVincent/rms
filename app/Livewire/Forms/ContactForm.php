@@ -14,19 +14,19 @@ use Livewire\Form;
 final class ContactForm extends Form
 {
     #[Validate('required|string|min:3')]
-    public string $name;
+    public string $name = '';
 
     #[Validate('required|email')]
-    public string $email;
+    public string $email = '';
 
     #[Validate('required|string')]
-    public string $subject;
+    public string $subject = '';
 
     #[Validate('required|string')]
-    public string $message;
+    public string $message = '';
 
     #[Validate('required|string|min:10|max:12')]
-    public string $phone_number;
+    public string $phone_number = '';
 
     /**
      * @throws ValidationException
@@ -41,9 +41,15 @@ final class ContactForm extends Form
             ->notify(new CustomerSupportAcknowledgement($support));
     }
 
-    /**
-     * Get all form data as an array.
-     */
+    public function resetForm(): void
+    {
+        $this->name = '';
+        $this->email = '';
+        $this->subject = '';
+        $this->message = '';
+        $this->phone_number = '';
+    }
+
     public function all(): array
     {
         return [
@@ -55,9 +61,6 @@ final class ContactForm extends Form
         ];
     }
 
-    /**
-     * Get form data excluding specific keys (for logging or masking).
-     */
     public function except(mixed $properties): array
     {
         return collect($this->all())->except($properties)->toArray();

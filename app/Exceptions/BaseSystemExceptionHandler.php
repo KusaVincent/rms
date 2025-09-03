@@ -19,10 +19,10 @@ abstract class BaseSystemExceptionHandler
      */
     final public function logToElasticsearch(Throwable $e, Request $request, array $additionalData = []): void
     {
-        $errorData = $this->buildErrorDocument($e, $request, $additionalData);
+        $this->buildErrorDocument($e, $request, $additionalData);
 
         try {
-            $this->elasticsearchService->logError($errorData);
+            $this->elasticsearchService->logError();
         } catch (Throwable $loggingError) {
             Log::error('Failed to log error to Elasticsearch', [
                 'elasticsearch_error' => $loggingError->getMessage(),
@@ -55,7 +55,7 @@ abstract class BaseSystemExceptionHandler
             'environment' => config('app.env'),
             'file' => $this->sanitizeFilePath($e->getFile()),
             'line' => $e->getLine(),
-            'context' => rescue(fn () => $this->getRequestContext($request), []),
+            'context' => rescue(fn (): array => $this->getRequestContext($request), []),
             'request_data' => $this->sanitizeRequestData($request),
             'headers' => $this->sanitizeHeaders($request),
             'response_time' => round($responseTime, 2),
@@ -108,7 +108,7 @@ abstract class BaseSystemExceptionHandler
             if (auth()->check()) {
                 return $this->mapUserContext(auth()->user(), 'user');
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable) {
             return null;
         }
 

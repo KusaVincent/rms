@@ -11,19 +11,15 @@ use Monolog\Logger;
 
 final class ElasticLogger
 {
-    public function __invoke(array $config): Logger
+    public function __invoke(): Logger
     {
         $client = ElasticSearch::getClient();
-
         $index = 'laravel-logs';
-
         $handler = new ElasticsearchHandler($client, [
             'index' => $index,
             'type' => '_doc',
         ]);
-
         $handler->setFormatter(new ElasticsearchFormatter($index, '_doc'));
-
         return new Logger('elasticsearch', [$handler]);
     }
 }

@@ -11,7 +11,9 @@ use App\Models\Contact as ModelsContact;
 use Devrabiul\ToastMagic\Facades\ToastMagic;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
+use Throwable;
 
 final class Contact extends Component
 {
@@ -40,11 +42,26 @@ final class Contact extends Component
                     'form_data' => $this->form->except(['email', 'phone_number']),
                 ]
             );
+            $this->form->resetForm();
 
             ToastMagic::success('Your message has been sent successfully!');
 
             return redirect()->back()->with('message', 'Your message has been sent successfully!');
-        } catch (\Throwable $e) {
+        } catch (ValidationException $e) {
+            LogHelper::exception(
+                $e,
+                request: request(),
+                additionalData: [
+                    'component' => 'Contact Livewire Component',
+                    'user_id' => $user?->id,
+                    'user_email' => $user?->email,
+                    'session_id' => $sessionId,
+                    'form_data' => $this->form->except(['email', 'phone_number']),
+                ]
+            );
+
+            throw $e;
+        } catch (Throwable $e) {
             LogHelper::exception(
                 $e,
                 request: request(),

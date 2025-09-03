@@ -40,8 +40,9 @@ final class Search extends Component
             'relations' => $this->relations(),
         ];
 
-        if (empty($this->search)) {
+        if ($this->search === '' || $this->search === '0') {
             $this->redirectRoute($this->redirectRoute, navigate: true);
+
             return;
         }
 

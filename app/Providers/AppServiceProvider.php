@@ -16,7 +16,7 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('elasticsearchservice', fn($app): \App\Services\ElasticSearchService => new ElasticSearchService());
+        $this->app->singleton('elasticsearchservice', fn ($app): ElasticSearchService => new ElasticSearchService());
     }
 
     /**

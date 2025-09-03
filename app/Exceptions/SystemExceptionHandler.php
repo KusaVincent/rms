@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
-class SystemExceptionHandler extends BaseSystemExceptionHandler
+final class SystemExceptionHandler extends BaseSystemExceptionHandler
 {
     public static array $handlers = [
         AuthenticationException::class => 'handleAuthenticationException',
