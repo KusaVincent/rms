@@ -8,6 +8,9 @@
             {{ $rent }}
         </li>
         <li><strong>{{ __('Rental Type') }}:</strong> {{ $size }}</li>
-        <li><strong>{{ __('Location') }}:</strong> {{ $location }}</li>
+        <li>
+            <strong>{{ __('Location') }}:</strong>
+            <address class="inline">{!! $location !!}</address>
+        </li>
     </ul>
 </div>

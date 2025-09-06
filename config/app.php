@@ -55,6 +55,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'admin' => env('ADMIN_URL', 'http://localhost'),
 
     /*
     |--------------------------------------------------------------------------
