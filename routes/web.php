@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function (): void {
 
 Route::get('/preview-support-email', function () {
     $support = CustomerSupport::first(); // or use a fake model instance for preview
+
     return (new PreviewSupportAcknowledgementMail($support))->render();
 });
 

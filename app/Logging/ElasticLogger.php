@@ -20,6 +20,7 @@ final class ElasticLogger
             'type' => '_doc',
         ]);
         $handler->setFormatter(new ElasticsearchFormatter($index, '_doc'));
+
         return new Logger('elasticsearch', [$handler]);
     }
 }
