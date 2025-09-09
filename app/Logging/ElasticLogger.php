@@ -14,7 +14,7 @@ final class ElasticLogger
     public function __invoke(): Logger
     {
         $client = ElasticSearch::getClient();
-        $index = 'laravel-logs';
+        $index = 'client_system_logs';
         $handler = new ElasticsearchHandler($client, [
             'index' => $index,
             'type' => '_doc',

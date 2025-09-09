@@ -55,7 +55,7 @@ final class LogHelper
 
         $log = self::getArr($request, $log, $additionalData);
 
-        return ElasticSearch::populateIndex('log_error', $log);
+        return ElasticSearch::populateIndex('client_error_log', $log);
     }
 
     private static function getArr(?Request $request, array $log, array $additionalData): array
@@ -91,6 +91,6 @@ final class LogHelper
 
         $log = self::getArr($request, $log, $additionalData);
 
-        return ElasticSearch::populateIndex('log_'.$index, $log);
+        return ElasticSearch::populateIndex('client_'.$index.'_log', $log);
     }
 }
