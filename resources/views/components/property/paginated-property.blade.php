@@ -14,7 +14,7 @@
                 :link="route('details', ['slug' => $property->slug])"
                 :propertyType="$property->propertyType->type_name"
                 :location="$property->location->town_city . ', ' . $property->location->area"
-                :image="asset($property->property_image ? 'storage/property/' . $property->property_image : 'default/image.png')"
+                :image="$property->property_image ? config('app.media') . '/storage/' . $property->property_image : asset('storage/property/default.png')"
             />
         @empty
             <div

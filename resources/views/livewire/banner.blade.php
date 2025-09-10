@@ -6,13 +6,13 @@
 
     if (Route::currentRouteName() === 'home') {
         $bannerHeight = 'h-[75vh]';
-        $backgroundImage = asset('storage/banner-2.jpg');
+        $backgroundImage = config('app.media') . 'storage/banner-2.jpg';
     } elseif (Route::currentRouteName() === 'properties') {
         $bannerHeight = 'h-[50vh]';
-        $backgroundImage = asset('storage/banner.jpg');
+        $backgroundImage = config('app.media') . 'storage/banner.jpg';
     } else {
         $bannerHeight = 'h-[25vh]';
-        $backgroundImage = asset('storage/breadcrumb.jpg');
+        $backgroundImage = config('app.media') . 'storage/breadcrumb.jpg';
     }
 @endphp
 
@@ -40,28 +40,28 @@
         </x-layouts.header-section>
     @elseif(Route::currentRouteName() === 'details')
         <x-layouts.header-section title="Discover Your Next Home"
-                                  :breadcrumbs="[
+            :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'Property Details']
             ]"
         />
     @elseif(Route::currentRouteName() === 'contact')
         <x-layouts.header-section title="Contact Us"
-                                  :breadcrumbs="[
+             :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'Contact Us']
             ]"
         />
     @elseif(Route::currentRouteName() === 'about')
         <x-layouts.header-section title="About Us"
-                                  :breadcrumbs="[
+            :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')],
                 ['label' => 'About Us']
             ]"
         />
     @else
         <x-layouts.header-section title="Discover More"
-                                  :breadcrumbs="[
+            :breadcrumbs="[
                 ['label' => 'Home', 'route' => route('home')]
             ]"
         />

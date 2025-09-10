@@ -10,7 +10,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div class="lg:col-span-3">
-            <x-ui.image-display src="{{ asset('storage/property/' . $property->property_image) }}" alt="Property Image" :negotiable="$property->negotiable"/>
+            <x-ui.image-display src="{{ $property->property_image ? config('app.media') . '/storage/' . $property->property_image : asset('storage/property/default.png') }}" alt="Property Image" :negotiable="$property->negotiable"/>
             <x-ui.property-media :media="$property"/>
             <x-property.property-details
                 rent="{{ $property->rent }}"

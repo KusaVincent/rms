@@ -11,7 +11,10 @@
     @endif
 
     <a href="{{ $link }}" wire:navigate>
-        <img class="rounded-t-lg w-full h-auto" src="{{ $image }}" alt="Property Image" />
+        <img
+            class="rounded-t-lg w-full h-[200px] object-cover"
+            src="{{ $image }}"
+            alt="Property Image" />
     </a>
 
     <div class="p-5 flex-grow">

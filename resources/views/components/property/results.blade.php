@@ -12,7 +12,7 @@
                 :link="route('details', ['slug' => $result['slug']])"
                 :propertyType="$result['property_type']['type_name'] ?? ''"
                 :location="$result['location']['town_city'] . ', ' . ($result['location']['area'] ?? '')"
-                :image="asset($result['property_image'] ? 'storage/property/' . $result['property_image'] : 'default/image.png')"
+                :image="$result['property_image'] ? config('app.media') . '/storage/' . $result['property_image'] : asset('storage/property/default.png')"
             />
         @endforeach
     </div>

@@ -7,7 +7,7 @@
             <div class="space-y-4 m-2">
                 <a href="{{ route('details', ['slug' => $property->slug]) }}" wire:navigate class="block">
                     <div class="flex items-center space-x-4">
-                        <img src="{{ asset('storage/property/' . ($property->property_image ?? 'default.jpg')) }}"
+                        <img src="{{ $property->property_image ? config('app.media') . '/storage/' . $property->property_image : asset('storage/property/default.png') }}"
                              alt="Property Image" class="w-20 h-20 object-cover rounded">
                         <div>
                             <h6 class="text-blue-600 font-semibold">{{ $property->name }}</h6>
@@ -27,3 +27,4 @@
         @endforeach
     </div>
 @endif
+

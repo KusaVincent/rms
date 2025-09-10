@@ -12,8 +12,8 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
-        <link rel="preload" href="{{ asset('storage/logo/logo.png') }}" as="image">
-        <link rel="shortcut icon" href="{{ asset('storage/favicon.png') }}" type=" image/x-icon">
+        <link rel="preload" href="{{ config('app.media') . 'storage/logo/logo.png' }}" as="image">
+        <link rel="shortcut icon" href="{{ config('app.media') . 'storage/favicon.png' }}" type=" image/x-icon">
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         {!! ToastMagic::styles() !!}
