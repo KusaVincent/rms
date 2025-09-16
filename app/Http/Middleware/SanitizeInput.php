@@ -18,31 +18,54 @@ final class SanitizeInput
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $clean = function ($value, $key = null) use (&$clean) {
-            if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                    $value[$k] = $clean($v, $k);
-                }
-
-                return $value;
-            }
-
-            if (is_string($value)) {
-                $value = mb_trim(strip_tags($value));
-
-                if ($key !== null && str_contains(Str::lower((string) $key), 'email')) {
-                    return Str::lower($value);
-                }
-
-                return $value;
-            }
-
-            return $value;
-        };
-
-        $sanitized = $clean($request->all());
+        $sanitized = $this->sanitizeArray($request->all());
         $request->merge($sanitized);
 
         return $next($request);
+    }
+
+    private function sanitizeValue(mixed $value, string $key): mixed
+    {
+        if (is_array($value)) {
+            return $this->sanitizeArray($value);
+        }
+
+        if (is_string($value)) {
+            $value = mb_trim(strip_tags($value));
+
+            $keyLower = Str::lower($key);
+
+            if (Str::contains($keyLower, 'email')) {
+                return Str::lower($value);
+            }
+
+            if (Str::contains($keyLower, 'name')) {
+                return $this->formatName($value);
+            }
+
+            if (Str::contains($keyLower, 'subject') || Str::contains($keyLower, 'message')) {
+                return Str::ucfirst($value);
+            }
+
+            return $value;
+        }
+
+        return $value;
+    }
+
+    private function sanitizeArray(array $data): array
+    {
+        $sanitized = [];
+
+        foreach ($data as $key => $value) {
+            $sanitized[$key] = $this->sanitizeValue($value, (string) $key);
+        }
+
+        return $sanitized;
+    }
+
+    private function formatName(string $value): string
+    {
+        return Str::title(Str::lower($value));
     }
 }
