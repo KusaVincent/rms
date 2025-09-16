@@ -24,6 +24,17 @@ final class SanitizeInput
         return $next($request);
     }
 
+    private function sanitizeArray(array $data): array
+    {
+        $sanitized = [];
+
+        foreach ($data as $key => $value) {
+            $sanitized[$key] = $this->sanitizeValue($value, (string) $key);
+        }
+
+        return $sanitized;
+    }
+
     private function sanitizeValue(mixed $value, string $key): mixed
     {
         if (is_array($value)) {
@@ -51,17 +62,6 @@ final class SanitizeInput
         }
 
         return $value;
-    }
-
-    private function sanitizeArray(array $data): array
-    {
-        $sanitized = [];
-
-        foreach ($data as $key => $value) {
-            $sanitized[$key] = $this->sanitizeValue($value, (string) $key);
-        }
-
-        return $sanitized;
     }
 
     private function formatName(string $value): string
