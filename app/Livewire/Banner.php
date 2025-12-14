@@ -24,9 +24,9 @@ final class Banner extends Component
     private function determineBannerAttributes(string $path): array
     {
         return match ($path) {
-            'home' => ['h-[75vh]', config('app.media') . 'storage/banner-2.jpg'],
-            'properties' => ['h-[50vh]', config('app.media') . 'storage/banner.jpg'],
-            default => ['h-[25vh]', config('app.media') . 'storage/breadcrumb.jpg'],
+            'home' => ['h-[75vh]', config('app.media').'storage/banner-2.jpg'],
+            'properties' => ['h-[50vh]', config('app.media').'storage/banner.jpg'],
+            default => ['h-[25vh]', config('app.media').'storage/breadcrumb.jpg'],
         };
     }
 }

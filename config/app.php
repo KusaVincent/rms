@@ -131,4 +131,6 @@ return [
     'property_number' => env('PROPERTY_NUMBER_PER_PAGE', 24),
     'related_property' => env('PROPERTY_RELATED_NUMBER_PER_PAGE', 24),
 
+    'leasePanelUrl' => env('LEASE_PANEL_DOMAIN', 'https://lease.arms.test'),
+    'managePanelUrl' => env('MANAGE_PANEL_DOMAIN', 'https://manage.arms.test'),
 ];

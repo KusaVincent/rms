@@ -36,10 +36,10 @@
                     @endif
                 @endauth
 
-                <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.admin') }}">
+                <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.leasePanelUrl') }}">
                     Find Tenants
                 </x-navigation.nav-link>
-                <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.admin') }}">
+                <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.managePanelUrl') }}">
                     Post Properties
                 </x-navigation.nav-link>
             </div>
@@ -83,8 +83,8 @@
                 @endif
             @endauth
 
-            <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.admin') }}">Find Tenants</x-navigation.nav-link>
-            <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.admin') }}">Post Properties</x-navigation.nav-link>
+            <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.leasePanelUrl') }}">Find Tenants</x-navigation.nav-link>
+            <x-navigation.nav-link target="_blank" :navigation="false" href="{{ config('app.managePanelUrl') }}">Post Properties</x-navigation.nav-link>
         </div>
     </nav>
 </div>
